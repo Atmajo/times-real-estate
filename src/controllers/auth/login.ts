@@ -4,34 +4,33 @@ import { Request, Response } from "express";
 import { validator } from "@/lib/validator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { registerSchema } from "@/schemas";
+import { loginSchema } from "@/schemas";
 
-export const register = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response) => {
   try {
     const body = req.body;
 
     const validatedData = validator({
-      schema: registerSchema,
+      schema: loginSchema,
       body,
     });
 
-    const existingUser = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { email: validatedData.email },
     });
 
-    if (existingUser) {
-      return res.status(409).json({ message: "User already exists" });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    const hashedPassword = await bcrypt.hash(validatedData.password, 10);
+    const isPasswordValid = await bcrypt.compare(
+      validatedData.password,
+      user.password
+    );
 
-    const user = await prisma.user.create({
-      data: {
-        name: validatedData.name,
-        email: validatedData.email,
-        password: hashedPassword,
-      },
-    });
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
 
     const token = jwt.sign(
       { userId: user.id, email: user.email, role: user.role },
@@ -46,7 +45,7 @@ export const register = async (req: Request, res: Response) => {
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
     return res.status(200).json({
-      message: "Registration successful",
+      message: "Login successful",
     });
   } catch (error) {
     if (

@@ -1,20 +1,23 @@
 import { Request, Response, Router } from "express";
-import { verifyToken } from "../middlewares/token";
+import { verifyToken } from "@/middlewares/token";
 import logger from "@/logger/logger";
 import { existsSync, readFileSync } from "fs";
 import { join } from "path";
-import { getClientIp } from "request-ip"
+import { developerRouter } from "./developerRouter";
+import { areaRouter } from "./areaRouter";
+import { communityRouter } from "./communityRouter";
+import { accommodationRouter } from "./accommodationRouter";
+import { possessionRouter } from "./possessionRouter";
+import { paymentPlanRouter } from "./paymentPlanRouter";
+import { featureAmenitiesRouter } from "./featureAmenitiesRouter";
+import { propertyRouter } from "./propertyRouter";
+import { propertyContactRouter } from "./propertyContactRouter";
+import { contactRouter } from "./contactRouter";
 
 const router = Router();
 
 router.get("/", (req: Request, res: Response) => {
-  const ip = getClientIp(req)
-  logger.info(ip);
   res.send("Express + TypeScript Server is running");
-});
-
-router.get("/ping", (req: Request, res: Response) => {
-  res.json({ data: "pong" });
 });
 
 router.get("/logs", (req: Request, res: Response) => {
@@ -34,5 +37,17 @@ router.get("/logs", (req: Request, res: Response) => {
     res.status(500).send("Error reading log file");
   }
 });
+
+// Protected routes
+router.use("/developers", verifyToken, developerRouter);
+router.use("/areas", verifyToken, areaRouter);
+router.use("/communities", verifyToken, communityRouter);
+router.use("/accommodations", verifyToken, accommodationRouter);
+router.use("/possessions", verifyToken, possessionRouter);
+router.use("/payment-plans", verifyToken, paymentPlanRouter);
+router.use("/feature-amenities", verifyToken, featureAmenitiesRouter);
+router.use("/properties", verifyToken, propertyRouter);
+router.use("/property-contacts", verifyToken, propertyContactRouter);
+router.use("/contacts", verifyToken, contactRouter);
 
 export { router as indexRouter };

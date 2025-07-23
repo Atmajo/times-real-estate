@@ -4,15 +4,189 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+enum PropertyTypes {
+  Apartments
+  Villas
+  Townhouses
+  Penthouses
+  Lands
+  Offices
+  Mansions
+  Duplex
+  Warehouse
+  Lofts
+}
+
+enum Status {
+  Coming_Soon
+  Offplan
+  Ready_To_Move
+  Resale
+}
+
+enum PropertyUserType {
+  Individual
+  Agent
+  Investor
+  Do_not_want_to_disclose
+  Others
+}
+
+enum Usertype {
+  MANAGER
+  ADMIN
+}
+
 model User {
-  id           String       @id @default(auto()) @map("_id") @db.ObjectId
-  email        String       @unique
-  name         String
-  password     String  
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Usertype @default(MANAGER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Developer {
+  id          String @id @default(cuid())
+  name        String
+  description String
+  
+  // Relations
+  properties Property[]
+  
+  @@map("developer")
+}
+
+model Area {
+  id   String @id @default(cuid())
+  name String
+  
+  // Relations
+  communities Community[]
+  Property    Property[]
+  
+  @@map("area")
+}
+
+model Community {
+  id          String @id @default(cuid())
+  name        String
+  description String
+  areaId      String
+  
+  // Relations
+  area       Area       @relation(fields: [areaId], references: [id])
+  properties Property[]
+  
+  @@map("community")
+}
+
+model Accommodation {
+  id    String @id @default(cuid())
+  value String @unique
+
+  // Relations
+  properties Property[]
+
+  @@map("accomodation")
+}
+
+model Possession {
+  id    String @id @default(cuid())
+  value String @unique
+
+  // Relations
+  properties Property[]
+
+  @@map("possession")
+}
+
+model PaymentPlan {
+  id    String @id @default(cuid())
+  name  String
+  value String
+
+  // Relations
+  properties Property[]
+
+  @@map("paymentPlan")
+}
+
+model FeatureAmenities {
+  id   String @id @default(cuid())
+  name String
+  logo String // link
+
+  // Relations
+  properties Property[]
+
+  @@map("featureAmenities")
+}
+
+model Property {
+  id                  String        @id @default(cuid())
+  developerId         String
+  communityId         String
+  images              String[]
+  name                String
+  overview            String
+  status              Status
+  type                PropertyTypes
+  isFeatured          Boolean
+  accommodation       String[]
+  possession          String
+  size                Float
+  downPayment         Float
+  paymentPlanId       String
+  handover            DateTime
+  featureAmenitiesId  String
+  brochure            String
+  floorPlanBrochure   String
+  paymentPlanBrochure String
+  price               Float
+  created_at          DateTime      @default(now())
+
+  // Relations
+  developer        Developer         @relation(fields: [developerId], references: [id])
+  community        Community         @relation(fields: [communityId], references: [id])
+  paymentPlan      PaymentPlan       @relation(fields: [paymentPlanId], references: [id])
+  featureAmenities FeatureAmenities  @relation(fields: [featureAmenitiesId], references: [id])
+  propertyContacts PropertyContact[]
+  Accommodation    Accommodation     @relation(fields: [accommodationId], references: [id])
+  accommodationId  String
+  Possession       Possession        @relation(fields: [possessionId], references: [id])
+  possessionId     String
+  Area             Area              @relation(fields: [areaId], references: [id])
+  areaId           String
+  
+  @@map("properties")
+}
+
+model PropertyContact {
+  id         String           @id @default(cuid())
+  propertyId String           @unique
+  name       String
+  phone      String
+  email      String
+  type       PropertyUserType
+  message    String
+  
+  // Relations
+  property Property @relation(fields: [propertyId], references: [id])
+  
+  @@map("propertyContact")
+}
+
+model Contact {
+  id    String @id @default(cuid())
+  name  String
+  phone String
+  email String
+  
+  @@map("contact")
 }
