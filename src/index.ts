@@ -5,6 +5,7 @@ import { indexRouter } from "@/routers";
 import { authRouter } from "./routers/authRouter";
 import { config } from "@/config/config";
 import logger from "@/logger/logger";
+import schedulePing from "./lib/cron";
 
 const app: Express = express();
 const port = config.port;
@@ -27,7 +28,7 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
       error: "Invalid JSON format",
       message:
         "The request body contains malformed JSON. Please check your JSON syntax.",
-    });
+    });schedulePing
   }
   next();
 });
@@ -41,5 +42,6 @@ app.use("/api", indexRouter);
 app.use("/auth", authRouter);
 
 app.listen(port, async () => {
+  await schedulePing.start();
   logger.info(`Server is running at http://localhost:${port}`);
 });
