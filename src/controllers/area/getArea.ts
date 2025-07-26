@@ -10,7 +10,7 @@ export const getArea = async (req: Request, res: Response) => {
       where: { id },
       include: {
         communities: true,
-        Property: true,
+        properties: true,
       },
     });
 

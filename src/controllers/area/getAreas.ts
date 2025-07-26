@@ -8,7 +8,7 @@ export const getAreas = async (req: Request, res: Response) => {
     const areas = await prisma.area.findMany({
       include: {
         communities: true,
-        Property: true,
+        properties: true,
       },
     });
 

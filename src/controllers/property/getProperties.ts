@@ -46,13 +46,13 @@ export const getProperties = async (req: Request, res: Response) => {
         community: true,
         paymentPlan: true,
         featureAmenities: true,
-        Accommodation: true,
-        Possession: true,
-        Area: true,
+        accommodation: true,
+        possession: true,
+        area: true,
         propertyContacts: true,
       },
       orderBy: {
-        created_at: 'desc',
+        createdAt: 'desc',
       },
     });
 
@@ -84,9 +84,9 @@ export const getProperty = async (req: Request, res: Response) => {
         },
         paymentPlan: true,
         featureAmenities: true,
-        Accommodation: true,
-        Possession: true,
-        Area: true,
+        accommodation: true,
+        possession: true,
+        area: true,
         propertyContacts: true,
       },
     });
