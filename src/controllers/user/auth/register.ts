@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { registerSchema } from "@/schemas";
 
-export const register = async (req: Request, res: Response) => {
+export const userRegister = async (req: Request, res: Response) => {
   try {
     const body = req.body;
 
