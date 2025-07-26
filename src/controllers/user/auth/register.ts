@@ -4,36 +4,37 @@ import { Request, Response } from "express";
 import { validator } from "@/lib/validator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { loginSchema } from "@/schemas";
+import { registerSchema } from "@/schemas";
 
-export const login = async (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response) => {
   try {
     const body = req.body;
-    
+
     const validatedData = validator({
-      schema: loginSchema,
+      schema: registerSchema,
       body,
     });
 
-    const admin = await prisma.admin.findUnique({
+    const existingUser = await prisma.user.findUnique({
       where: { email: validatedData.email },
     });
 
-    if (!admin) {
-      return res.status(404).json({ message: "User not found" });
+    if (existingUser) {
+      return res.status(409).json({ message: "User already exists" });
     }
 
-    const isPasswordValid = await bcrypt.compare(
-      validatedData.password,
-      admin.password
-    );
+    const hashedPassword = await bcrypt.hash(validatedData.password, 10);
 
-    if (!isPasswordValid) {
-      return res.status(401).json({ message: "Invalid credentials" });
-    }
+    const user = await prisma.user.create({
+      data: {
+        name: validatedData.name,
+        email: validatedData.email,
+        password: hashedPassword,
+      },
+    });
 
     const token = jwt.sign(
-      { userId: admin.id, email: admin.email, role: admin.role },
+      { userId: user.id, email: user.email, role: "user" },
       process.env.JWT_SECRET as string,
       { expiresIn: "30d" }
     );
@@ -45,7 +46,7 @@ export const login = async (req: Request, res: Response) => {
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
     return res.status(200).json({
-      message: "Login successful",
+      message: "Registration successful",
     });
   } catch (error) {
     if (

@@ -41,7 +41,66 @@ enum Usertype {
   ADMIN
 }
 
+enum Mode {
+  OFFLINE
+  ONLINE
+}
+
+enum Timeframe {
+  MORNING
+  AFTERNOON
+  EVENING
+  ANYTIME
+}
+
 model User {
+  id          String        @id @default(cuid())
+  image       String?
+  name        String
+  email       String        @unique
+  password    String
+  phone       String?
+  address     String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  collection  Collection[]
+  requestTour RequestTour[]
+
+  @@map("user")
+}
+
+model Collection {
+  id         String   @id @default(cuid())
+  userId     String
+  propertyId String
+  createdAt  DateTime @default(now())
+
+  // Relations
+  user       User     @relation(fields: [userId], references: [id])
+  properties Property @relation(fields: [propertyId], references: [id])
+
+  @@map("collection")
+}
+
+model RequestTour {
+  id         String    @id @default(cuid())
+  userId     String
+  propertyId String
+  mode       Mode
+  timeframe  Timeframe
+  name       String
+  email      String
+  message    String
+  createdAt  DateTime  @default(now())
+
+  // Relations
+  user     User     @relation(fields: [userId], references: [id])
+  property Property @relation(fields: [propertyId], references: [id])
+
+  @@map("requestTour")
+}
+
+model Admin {
   id        String   @id @default(cuid())
   name      String
   email     String   @unique
@@ -49,27 +108,29 @@ model User {
   role      Usertype @default(MANAGER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("admin")
 }
 
 model Developer {
   id          String @id @default(cuid())
   name        String
   description String
-  
+
   // Relations
   properties Property[]
-  
+
   @@map("developer")
 }
 
 model Area {
   id   String @id @default(cuid())
   name String
-  
+
   // Relations
   communities Community[]
-  Property    Property[]
-  
+  properties  Property[]
+
   @@map("area")
 }
 
@@ -78,11 +139,11 @@ model Community {
   name        String
   description String
   areaId      String
-  
+
   // Relations
   area       Area       @relation(fields: [areaId], references: [id])
   properties Property[]
-  
+
   @@map("community")
 }
 
@@ -138,8 +199,6 @@ model Property {
   status              Status
   type                PropertyTypes
   isFeatured          Boolean
-  accommodation       String[]
-  possession          String
   size                Float
   downPayment         Float
   paymentPlanId       String
@@ -149,7 +208,7 @@ model Property {
   floorPlanBrochure   String
   paymentPlanBrochure String
   price               Float
-  created_at          DateTime      @default(now())
+  createdAt           DateTime      @default(now())
 
   // Relations
   developer        Developer         @relation(fields: [developerId], references: [id])
@@ -157,13 +216,15 @@ model Property {
   paymentPlan      PaymentPlan       @relation(fields: [paymentPlanId], references: [id])
   featureAmenities FeatureAmenities  @relation(fields: [featureAmenitiesId], references: [id])
   propertyContacts PropertyContact[]
-  Accommodation    Accommodation     @relation(fields: [accommodationId], references: [id])
+  accommodation    Accommodation     @relation(fields: [accommodationId], references: [id])
   accommodationId  String
-  Possession       Possession        @relation(fields: [possessionId], references: [id])
+  possession       Possession        @relation(fields: [possessionId], references: [id])
   possessionId     String
-  Area             Area              @relation(fields: [areaId], references: [id])
+  area             Area              @relation(fields: [areaId], references: [id])
   areaId           String
-  
+  collection       Collection[]
+  requestTour      RequestTour[]
+
   @@map("properties")
 }
 
@@ -175,10 +236,10 @@ model PropertyContact {
   email      String
   type       PropertyUserType
   message    String
-  
+
   // Relations
   property Property @relation(fields: [propertyId], references: [id])
-  
+
   @@map("propertyContact")
 }
 
@@ -187,6 +248,6 @@ model Contact {
   name  String
   phone String
   email String
-  
+
   @@map("contact")
 }

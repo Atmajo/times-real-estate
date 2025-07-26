@@ -9,35 +9,35 @@ import { loginSchema } from "@/schemas";
 export const login = async (req: Request, res: Response) => {
   try {
     const body = req.body;
-    
+
     const validatedData = validator({
       schema: loginSchema,
       body,
     });
 
-    const admin = await prisma.admin.findUnique({
+    const user = await prisma.user.findUnique({
       where: { email: validatedData.email },
     });
 
-    if (!admin) {
+    if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
     const isPasswordValid = await bcrypt.compare(
       validatedData.password,
-      admin.password
+      user.password
     );
-
+    
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
     const token = jwt.sign(
-      { userId: admin.id, email: admin.email, role: admin.role },
+      { userId: user.id, email: user.email, role: "user" },
       process.env.JWT_SECRET as string,
       { expiresIn: "30d" }
     );
-
+    
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",

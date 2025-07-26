@@ -15,7 +15,7 @@ export const register = async (req: Request, res: Response) => {
       body,
     });
 
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await prisma.admin.findUnique({
       where: { email: validatedData.email },
     });
 
@@ -25,7 +25,7 @@ export const register = async (req: Request, res: Response) => {
 
     const hashedPassword = await bcrypt.hash(validatedData.password, 10);
 
-    const user = await prisma.user.create({
+    const user = await prisma.admin.create({
       data: {
         name: validatedData.name,
         email: validatedData.email,

@@ -166,3 +166,36 @@ export const updateContactSchema = z.object({
   phone: z.string().optional(),
   email: z.string().email().optional(),
 });
+
+// Collection schemas
+export const addCollectionSchema = z.object({
+  propertyId: z.string().min(1, "Property ID is required"),
+});
+
+export const getCollectionsSchema = z.object({
+  page: z.string().optional(),
+  limit: z.string().optional(),
+});
+
+// RequestTour schemas
+export const addRequestTourSchema = z.object({
+  propertyId: z.string().min(1, "Property ID is required"),
+  mode: z.enum(["OFFLINE", "ONLINE"], { message: "Mode is required" }),
+  timeframe: z.enum(["MORNING", "AFTERNOON", "EVENING", "ANYTIME"], { message: "Timeframe is required" }),
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email format"),
+  message: z.string().min(1, "Message is required"),
+});
+
+export const getRequestToursSchema = z.object({
+  page: z.string().optional(),
+  limit: z.string().optional(),
+});
+
+export const updateRequestTourSchema = z.object({
+  mode: z.enum(["OFFLINE", "ONLINE"]).optional(),
+  timeframe: z.enum(["MORNING", "AFTERNOON", "EVENING", "ANYTIME"]).optional(),
+  name: z.string().optional(),
+  email: z.string().email().optional(),
+  message: z.string().optional(),
+});
