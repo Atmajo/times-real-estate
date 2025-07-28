@@ -9,12 +9,12 @@ import { communityRouter } from "./communityRouter";
 import { accommodationRouter } from "./accommodationRouter";
 import { possessionRouter } from "./possessionRouter";
 import { paymentPlanRouter } from "./paymentPlanRouter";
-import { featureAmenitiesRouter } from "./featureAmenitiesRouter";
 import { propertyRouter } from "./propertyRouter";
 import { propertyContactRouter } from "./propertyContactRouter";
 import { contactRouter } from "./contactRouter";
 import { collectionRouter } from "./collectionRouter";
 import { requestTourRouter } from "./requestTourRouter";
+import { fileRouter } from "./fileRouter";
 
 const router = Router();
 
@@ -47,11 +47,11 @@ router.use("/communities", verifyToken, communityRouter);
 router.use("/accommodations", verifyToken, accommodationRouter);
 router.use("/possessions", verifyToken, possessionRouter);
 router.use("/payment-plans", verifyToken, paymentPlanRouter);
-router.use("/feature-amenities", verifyToken, featureAmenitiesRouter);
 router.use("/properties", verifyToken, propertyRouter);
 router.use("/property-contacts", verifyToken, propertyContactRouter);
 router.use("/contacts", verifyToken, contactRouter);
 router.use("/collections", verifyToken, collectionRouter);
 router.use("/request-tours", verifyToken, requestTourRouter);
+router.use("/file", verifyToken, fileRouter);
 
 export { router as indexRouter };

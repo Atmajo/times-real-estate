@@ -13,10 +13,8 @@ export const addContact = async (req: Request, res: Response) => {
     if (!validatedData) {
       return res.status(400).json({ error: "Invalid data" });
     }
-
-    const { name, phone, email } = validatedData;
     const contact = await prisma.contact.create({
-      data: { name, phone, email },
+      data: validatedData,
     });
 
     return res.status(201).json({
@@ -32,7 +30,7 @@ export const addContact = async (req: Request, res: Response) => {
 export const getContacts = async (req: Request, res: Response) => {
   try {
     const contacts = await prisma.contact.findMany({
-      orderBy: { id: 'desc' },
+      orderBy: { id: "desc" },
     });
 
     const { page, limit, totalPages, totalItems, items } = paginate(
@@ -78,7 +76,7 @@ export const updateContact = async (req: Request, res: Response) => {
     if (!validatedData) {
       return res.status(400).json({ error: "Invalid data" });
     }
-    
+
     const contact = await prisma.contact.update({
       where: { id },
       data: validatedData,

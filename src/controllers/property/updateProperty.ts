@@ -30,9 +30,6 @@ export const updateProperty = async (req: Request, res: Response) => {
     if (validatedData.paymentPlanId) {
       validationPromises.push(prisma.paymentPlan.findUnique({ where: { id: validatedData.paymentPlanId } }));
     }
-    if (validatedData.featureAmenitiesId) {
-      validationPromises.push(prisma.featureAmenities.findUnique({ where: { id: validatedData.featureAmenitiesId } }));
-    }
     if (validatedData.accommodationId) {
       validationPromises.push(prisma.accommodation.findUnique({ where: { id: validatedData.accommodationId } }));
     }
@@ -64,7 +61,6 @@ export const updateProperty = async (req: Request, res: Response) => {
         developer: true,
         community: true,
         paymentPlan: true,
-        featureAmenities: true,
         accommodation: true,
         possession: true,
         area: true,

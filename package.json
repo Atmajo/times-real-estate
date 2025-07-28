@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.850.0",
     "@google/genai": "^1.10.0",
     "@prisma/client": "^6.12.0",
     "cors": "^2.8.5",
@@ -19,6 +20,7 @@
     "express": "^5.1.0",
     "isomorphic-git": "^1.32.1",
     "module-alias": "^2.2.3",
+    "multer": "^2.0.2",
     "node-cron": "^4.2.1",
     "prisma": "^6.12.0",
     "request-ip": "^3.3.0",
@@ -31,6 +33,7 @@
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/module-alias": "^2.0.4",
+    "@types/multer": "^2.0.0",
     "@types/node": "^22.16.5",
     "@types/request-ip": "^0.0.41",
     "bcrypt": "^6.0.0",

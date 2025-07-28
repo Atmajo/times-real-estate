@@ -30,28 +30,27 @@
               "path": ["auth", "user", "register"]
             }
           },
-          "response": []
-        },
-        {
-          "name": "Login User",
           "event": [
             {
               "listen": "test",
               "script": {
+                "type": "text/javascript",
                 "exec": [
-                  "// Extract token from cookie and set as environment variable",
                   "const setCookieHeader = pm.response.headers.get('Set-Cookie');",
                   "if (setCookieHeader) {",
                   "    const tokenMatch = setCookieHeader.match(/token=([^;]+)/);",
                   "    if (tokenMatch) {",
-                  "        pm.environment.set('authToken', tokenMatch[1]);",
+                  "        pm.collectionVariables.set('authToken', tokenMatch[1]);",
                   "    }",
                   "}"
-                ],
-                "type": "text/javascript"
+                ]
               }
             }
           ],
+          "response": []
+        },
+        {
+          "name": "Login User",
           "request": {
             "method": "POST",
             "header": [
@@ -62,7 +61,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password123\"\n}"
+              "raw": "{\n  \"email\": \"admin@gmail.com\",\n  \"password\": \"Admin@123\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/auth/user/login",
@@ -70,6 +69,23 @@
               "path": ["auth", "user", "login"]
             }
           },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const setCookieHeader = pm.response.headers.get('Set-Cookie');",
+                  "if (setCookieHeader) {",
+                  "    const tokenMatch = setCookieHeader.match(/token=([^;]+)/);",
+                  "    if (tokenMatch) {",
+                  "        pm.collectionVariables.set('authToken', tokenMatch[1]);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
           "response": []
         }
       ]
@@ -97,28 +113,27 @@
               "path": ["auth", "register"]
             }
           },
-          "response": []
-        },
-        {
-          "name": "Login Admin",
           "event": [
             {
               "listen": "test",
               "script": {
+                "type": "text/javascript",
                 "exec": [
-                  "// Extract token from cookie and set as environment variable",
                   "const setCookieHeader = pm.response.headers.get('Set-Cookie');",
                   "if (setCookieHeader) {",
                   "    const tokenMatch = setCookieHeader.match(/token=([^;]+)/);",
                   "    if (tokenMatch) {",
-                  "        pm.environment.set('authToken', tokenMatch[1]);",
+                  "        pm.collectionVariables.set('authToken', tokenMatch[1]);",
                   "    }",
                   "}"
-                ],
-                "type": "text/javascript"
+                ]
               }
             }
           ],
+          "response": []
+        },
+        {
+          "name": "Login Admin",
           "request": {
             "method": "POST",
             "header": [
@@ -129,7 +144,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password123\"\n}"
+              "raw": "{\n  \"email\": \"admin@gmail.com\",\n  \"password\": \"Admin@123\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/auth/login",
@@ -137,6 +152,23 @@
               "path": ["auth", "login"]
             }
           },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const setCookieHeader = pm.response.headers.get('Set-Cookie');",
+                  "if (setCookieHeader) {",
+                  "    const tokenMatch = setCookieHeader.match(/token=([^;]+)/);",
+                  "    if (tokenMatch) {",
+                  "        pm.collectionVariables.set('authToken', tokenMatch[1]);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
           "response": []
         }
       ]
@@ -868,127 +900,6 @@
       ]
     },
     {
-      "name": "Feature Amenities",
-      "item": [
-        {
-          "name": "Get All Feature Amenities",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Cookie",
-                "value": "token={{authToken}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/feature-amenities?page=1&limit=10",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "feature-amenities"],
-              "query": [
-                {
-                  "key": "page",
-                  "value": "1"
-                },
-                {
-                  "key": "limit",
-                  "value": "10"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Feature Amenity by ID",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Cookie",
-                "value": "token={{authToken}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/feature-amenities/{{featureAmenityId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "feature-amenities", "{{featureAmenityId}}"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Create Feature Amenity",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Cookie",
-                "value": "token={{authToken}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Swimming Pool\",\n  \"logo\": \"https://example.com/pool-icon.png\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/feature-amenities",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "feature-amenities"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update Feature Amenity",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Cookie",
-                "value": "token={{authToken}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Infinity Pool\",\n  \"logo\": \"https://example.com/infinity-pool-icon.png\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/feature-amenities/{{featureAmenityId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "feature-amenities", "{{featureAmenityId}}"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Feature Amenity",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Cookie",
-                "value": "token={{authToken}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/feature-amenities/{{featureAmenityId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "feature-amenities", "{{featureAmenityId}}"]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
       "name": "Properties",
       "item": [
         {
@@ -1649,6 +1560,39 @@
               "raw": "{{baseUrl}}/api/request-tours/{{requestTourId}}",
               "host": ["{{baseUrl}}"],
               "path": ["api", "request-tours", "{{requestTourId}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "File Upload",
+      "item": [
+        {
+          "name": "Upload File",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "token={{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/file/upload",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "file", "upload"]
             }
           },
           "response": []

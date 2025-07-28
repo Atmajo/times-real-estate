@@ -22,8 +22,12 @@ export const verifyToken = (
   next: NextFunction
 ) => {
   try {
-    const token = req.cookies.token;
-    
+    const cookie =
+      (req.headers?.cookie?.match(/token=([^;]+)/) as unknown as string)[1] ||
+      req.cookies;
+
+    const token = cookie;
+
     if (!token) {
       res.status(401).json({ error: "Unauthorized" });
       return;
@@ -40,6 +44,10 @@ export const verifyToken = (
     if (!decoded) {
       res.status(401).json({ error: "Unauthorized" });
       return;
+    }
+
+    if (decoded.role === "UNVERIFIED") {
+      return res.status(401).json({ error: "Unauthorized" });
     }
 
     if (decoded.exp < Math.floor(Date.now() / 1000)) {

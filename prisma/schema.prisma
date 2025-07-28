@@ -37,8 +37,9 @@ enum PropertyUserType {
 }
 
 enum Usertype {
-  MANAGER
+  AGENT
   ADMIN
+  UNVERIFIED
 }
 
 enum Mode {
@@ -87,6 +88,7 @@ model RequestTour {
   userId     String
   propertyId String
   mode       Mode
+  date       DateTime
   timeframe  Timeframe
   name       String
   email      String
@@ -105,7 +107,7 @@ model Admin {
   name      String
   email     String   @unique
   password  String
-  role      Usertype @default(MANAGER)
+  role      Usertype @default(UNVERIFIED)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -124,8 +126,9 @@ model Developer {
 }
 
 model Area {
-  id   String @id @default(cuid())
-  name String
+  id    String @id @default(cuid())
+  image String
+  name  String
 
   // Relations
   communities Community[]
@@ -178,17 +181,6 @@ model PaymentPlan {
   @@map("paymentPlan")
 }
 
-model FeatureAmenities {
-  id   String @id @default(cuid())
-  name String
-  logo String // link
-
-  // Relations
-  properties Property[]
-
-  @@map("featureAmenities")
-}
-
 model Property {
   id                  String        @id @default(cuid())
   developerId         String
@@ -203,18 +195,20 @@ model Property {
   downPayment         Float
   paymentPlanId       String
   handover            DateTime
-  featureAmenitiesId  String
-  brochure            String
-  floorPlanBrochure   String
-  paymentPlanBrochure String
+  featureAmenities    Json
+  brochure            String // file link
+  floorPlanBrochure   String // file link
+  paymentPlanBrochure String // file link
   price               Float
+  lat                 String
+  long                String
+  availableDates      DateTime[]
   createdAt           DateTime      @default(now())
 
   // Relations
   developer        Developer         @relation(fields: [developerId], references: [id])
   community        Community         @relation(fields: [communityId], references: [id])
   paymentPlan      PaymentPlan       @relation(fields: [paymentPlanId], references: [id])
-  featureAmenities FeatureAmenities  @relation(fields: [featureAmenitiesId], references: [id])
   propertyContacts PropertyContact[]
   accommodation    Accommodation     @relation(fields: [accommodationId], references: [id])
   accommodationId  String
@@ -244,10 +238,12 @@ model PropertyContact {
 }
 
 model Contact {
-  id    String @id @default(cuid())
-  name  String
-  phone String
-  email String
+  id      String @id @default(cuid())
+  name    String
+  phone   String
+  email   String
+  type    String
+  message String
 
   @@map("contact")
 }

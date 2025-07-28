@@ -32,6 +32,7 @@ export const addRequestTour = async (req: Request, res: Response) => {
       data: {
         userId,
         propertyId: validatedData.propertyId,
+        date: validatedData.date,
         mode: validatedData.mode,
         timeframe: validatedData.timeframe,
         name: validatedData.name,

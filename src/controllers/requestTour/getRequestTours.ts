@@ -32,7 +32,6 @@ export const getRequestTours = async (req: Request, res: Response) => {
             community: true,
             area: true,
             paymentPlan: true,
-            featureAmenities: true,
           }
         }
       },
@@ -84,7 +83,6 @@ export const getRequestTour = async (req: Request, res: Response) => {
             community: true,
             area: true,
             paymentPlan: true,
-            featureAmenities: true,
           }
         }
       }
