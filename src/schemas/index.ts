@@ -4,6 +4,7 @@ export const registerSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email format"),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  role: z.enum(["ADMIN", "AGENT", "MANAGER"]).optional(),
 });
 
 export const loginSchema = z.object({
@@ -695,4 +696,16 @@ export const updateRequestTourSchema = z.object({
   name: z.string().optional(),
   email: z.email().optional(),
   message: z.string().optional(),
+});
+
+export const agentRegistration = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email format"),
+});
+
+export const addQuerySchema = z.object({
+  name: z.string().min(1, { message: "Name is required" }),
+  email: z.email({ message: "Invalid email" }),
+  phone: z.string().min(7, { message: "Invalid mobile number" }),
+  messgae: z.string().optional(),
 });

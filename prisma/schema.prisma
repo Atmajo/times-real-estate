@@ -106,7 +106,7 @@ model Admin {
   id        String   @id @default(cuid())
   name      String
   email     String   @unique
-  password  String
+  password  String?
   role      Usertype @default(UNVERIFIED)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -246,4 +246,14 @@ model Contact {
   message String
 
   @@map("contact")
+}
+
+model AgentQuery {
+  id      String @id @default(cuid())
+  name    String
+  phone   String
+  email   String
+  message String
+
+  @@map("agentQuery")
 }

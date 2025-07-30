@@ -23,28 +23,35 @@ export const register = async (req: Request, res: Response) => {
       return res.status(409).json({ message: "User already exists" });
     }
 
-    const hashedPassword = await bcrypt.hash(validatedData.password, 10);
+    const hashedPassword =
+      validatedData.password && (await bcrypt.hash(validatedData.password, 10));
 
     const user = await prisma.admin.create({
       data: {
         name: validatedData.name,
         email: validatedData.email,
-        password: hashedPassword,
+        password: hashedPassword && hashedPassword,
+        role: validatedData.role,
       },
     });
 
-    const token = jwt.sign(
-      { userId: user.id, email: user.email, role: user.role },
-      process.env.JWT_SECRET as string,
-      { expiresIn: "30d" }
-    );
+    const token =
+      user.role === "ADMIN" &&
+      jwt.sign(
+        { userId: user.id, email: user.email, role: user.role },
+        process.env.JWT_SECRET as string,
+        { expiresIn: "30d" }
+      );
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-    });
+    // TODO: Add email reset-password
+
+    user.role === "ADMIN" &&
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+      });
     return res.status(200).json({
       message: "Registration successful",
     });
