@@ -53,7 +53,7 @@ router.use("/property-contacts", verifyToken, propertyContactRouter);
 router.use("/contacts", verifyToken, contactRouter);
 router.use("/collections", verifyToken, collectionRouter);
 router.use("/request-tours", verifyToken, requestTourRouter);
-router.use("/admin", verifyToken, agentRouter);
+router.use("/agent", verifyToken, agentRouter);
 router.use("/file", verifyToken, fileRouter);
 
 export { router as indexRouter };
