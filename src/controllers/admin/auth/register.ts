@@ -5,6 +5,7 @@ import { validator } from "@/lib/validator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { registerSchema } from "@/schemas";
+import { sendOtp } from "@/mails/sendOtp";
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -34,24 +35,15 @@ export const register = async (req: Request, res: Response) => {
         role: validatedData.role,
       },
     });
+    
+    const token = jwt.sign(
+      { userId: user.id, email: user.email, role: user.role },
+      process.env.JWT_SECRET as string,
+      { expiresIn: "30d" }
+    );
+    
+    // TODO: reset mail
 
-    const token =
-      user.role === "ADMIN" &&
-      jwt.sign(
-        { userId: user.id, email: user.email, role: user.role },
-        process.env.JWT_SECRET as string,
-        { expiresIn: "30d" }
-      );
-
-    // TODO: Add email reset-password
-
-    user.role === "ADMIN" &&
-      res.cookie("token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-      });
     return res.status(200).json({
       message: "Registration successful",
     });

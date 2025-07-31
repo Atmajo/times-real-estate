@@ -27,7 +27,7 @@ export const userLogin = async (req: Request, res: Response) => {
       validatedData.password,
       user.password
     );
-    
+
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
@@ -37,7 +37,7 @@ export const userLogin = async (req: Request, res: Response) => {
       process.env.JWT_SECRET as string,
       { expiresIn: "30d" }
     );
-    
+
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -46,6 +46,14 @@ export const userLogin = async (req: Request, res: Response) => {
     });
     return res.status(200).json({
       message: "Login successful",
+      data: {
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        },
+      },
     });
   } catch (error) {
     if (

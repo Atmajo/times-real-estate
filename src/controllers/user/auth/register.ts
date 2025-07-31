@@ -5,6 +5,7 @@ import { validator } from "@/lib/validator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { registerSchema } from "@/schemas";
+import { sendOtp } from "@/mails/sendOtp";
 
 export const userRegister = async (req: Request, res: Response) => {
   try {
@@ -38,6 +39,8 @@ export const userRegister = async (req: Request, res: Response) => {
       process.env.JWT_SECRET as string,
       { expiresIn: "30d" }
     );
+
+    await sendOtp(validatedData.email, "user");
 
     res.cookie("token", token, {
       httpOnly: true,
