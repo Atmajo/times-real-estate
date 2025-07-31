@@ -23,6 +23,10 @@ router.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server is running");
 });
 
+router.get("/ping", (req: Request, res: Response) => {
+  res.json({ message: "pong" });
+});
+
 router.get("/logs", (req: Request, res: Response) => {
   try {
     const logFilePath = join(process.cwd(), "logs", "combined.log");

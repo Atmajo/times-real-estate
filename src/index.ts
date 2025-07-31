@@ -5,12 +5,18 @@ import { indexRouter } from "@/routers";
 import { authRouter } from "./routers/authRouter";
 import { config } from "@/config/config";
 import logger from "@/logger/logger";
-import schedulePing from "./lib/cron";
 import { defaultAdmin } from "./lib/defaultAdmin";
+import { initializeCronJobs } from "./lib/cron";
+import cors from "cors";
 
 const app: Express = express();
 const port = config.port;
 
+app.use(
+  cors({
+    origin: config.origin,
+  })
+);
 app.use(
   express.json({
     limit: "10mb",
@@ -30,7 +36,6 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
       message:
         "The request body contains malformed JSON. Please check your JSON syntax.",
     });
-    schedulePing;
   }
   next();
 });
@@ -44,7 +49,7 @@ app.use("/api", indexRouter);
 app.use("/auth", authRouter);
 
 app.listen(port, async () => {
-  await schedulePing.start();
-  await defaultAdmin()
+  initializeCronJobs();
+  await defaultAdmin();
   logger.info(`Server is running at http://localhost:${port}`);
 });

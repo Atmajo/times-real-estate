@@ -39,6 +39,7 @@ enum PropertyUserType {
 enum Usertype {
   AGENT
   ADMIN
+  USER
   UNVERIFIED
 }
 
@@ -60,6 +61,7 @@ model User {
   name        String
   email       String        @unique
   password    String
+  role        Usertype      @default(USER)
   phone       String?
   address     String?
   createdAt   DateTime      @default(now())
@@ -103,13 +105,14 @@ model RequestTour {
 }
 
 model Admin {
-  id        String   @id @default(cuid())
+  id        String     @id @default(cuid())
   name      String
-  email     String   @unique
+  email     String     @unique
   password  String?
-  role      Usertype @default(UNVERIFIED)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  role      Usertype   @default(UNVERIFIED)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Property  Property[]
 
   @@map("admin")
 }
@@ -185,6 +188,7 @@ model Property {
   id                  String        @id @default(cuid())
   developerId         String
   communityId         String
+  agentId             String?
   images              String[]
   name                String
   overview            String
@@ -206,10 +210,10 @@ model Property {
   createdAt           DateTime      @default(now())
 
   // Relations
-  developer        Developer         @relation(fields: [developerId], references: [id])
-  community        Community         @relation(fields: [communityId], references: [id])
+  developer        Developer         @relation(fields: [developerId], references: [id], onDelete: Cascade)
+  community        Community         @relation(fields: [communityId], references: [id], onDelete: Cascade)
   paymentPlan      PaymentPlan       @relation(fields: [paymentPlanId], references: [id])
-  propertyContacts PropertyContact[]
+  agent            Admin?            @relation(fields: [agentId], references: [id], onDelete: Cascade)
   accommodation    Accommodation     @relation(fields: [accommodationId], references: [id])
   accommodationId  String
   possession       Possession        @relation(fields: [possessionId], references: [id])
@@ -218,6 +222,7 @@ model Property {
   areaId           String
   collection       Collection[]
   requestTour      RequestTour[]
+  propertyContacts PropertyContact[]
 
   @@map("properties")
 }

@@ -1,26 +1,57 @@
 import { schedule } from "node-cron";
-import logger from "@/logger/logger";
 import { config } from "@/config/config";
+import logger from "@/logger/logger";
 
-const schedulePing = schedule(config.cronjob, async () => {
-  logger.info("Server ping cron job scheduled to run every 5 minutes");
+const ping = async () => {
   try {
-    const response = await fetch(`${config.url}/api/`, {
+    const response = await fetch(`${config.url}/api/ping`, {
       method: "GET",
     });
-    
+
     if (!response.ok) {
       throw new Error(`Ping failed with status: ${response.status}`);
     }
-    
+
     const data = await response.json();
-    console.log("Ping response data:", data.data);
+    console.log("Ping response data:", data.message);
   } catch (error) {
     logger.error("Cron job failed", {
       error: error instanceof Error ? error.message : String(error),
       timestamp: new Date().toISOString(),
     });
   }
-});
+};
 
-export default schedulePing;
+const jobs = [
+  {
+    name: "Daily Maintenance",
+    schedule: config.cronjob,
+    task: async () => ping(),
+  },
+];
+
+export const initializeCronJobs = () => {
+  logger.info(
+    `Server ping cron job scheduled to run every ${
+      config.nodeenv === "dev" ? "1 minute" : "5 minutes"
+    }`
+  );
+
+  jobs.forEach((job) => {
+    logger.info(
+      `Setting up cron job: ${job.name} with schedule: ${job.schedule}`
+    );
+    if (job.name === "Weekly Job Search Reminders") {
+      logger.info(`Weekly reminder scheduler will run on Sundays at 9:00 AM`);
+      logger.info(
+        `Each trigger will create a dynamic job that executes on a random day of the week between 6:00 AM - 9:00 PM`
+      );
+    }
+
+    schedule(job.schedule, job.task, {
+      timezone: "UTC",
+    });
+  });
+
+  logger.info(`${jobs.length} cron jobs initialized successfully`);
+};
