@@ -50,7 +50,7 @@ app.use("/api", indexRouter);
 app.use("/auth", authRouter);
 
 app.listen(port, async () => {
-  initializeCronJobs();
+  config.nodeenv !== "dev" && initializeCronJobs();
   await defaultAdmin();
   logger.info(`Server is running at http://localhost:${port}`);
 });
