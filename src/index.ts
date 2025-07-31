@@ -14,6 +14,7 @@ const port = config.port;
 
 app.use(
   cors({
+    credentials: true,
     origin: config.origin,
   })
 );
