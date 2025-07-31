@@ -9,7 +9,7 @@ import { loginSchema } from "@/schemas";
 export const login = async (req: Request, res: Response) => {
   try {
     const body = req.body;
-    
+
     const validatedData = validator({
       schema: loginSchema,
       body,
@@ -46,6 +46,14 @@ export const login = async (req: Request, res: Response) => {
     });
     return res.status(200).json({
       message: "Login successful",
+      data: {
+        user: {
+          id: admin.id,
+          name: admin.name,
+          email: admin.email,
+          role: admin.role,
+        },
+      },
     });
   } catch (error) {
     if (
