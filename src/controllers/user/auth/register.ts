@@ -41,16 +41,10 @@ export const userRegister = async (req: Request, res: Response) => {
     );
 
     await sendOtp(validatedData.email, "user");
-
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-      partitioned: process.env.NODE_ENV === "production",
-    });
+    
     return res.status(200).json({
       message: "Registration successful",
+      token: token,
     });
   } catch (error) {
     if (
