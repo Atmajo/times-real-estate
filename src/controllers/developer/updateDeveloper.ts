@@ -33,7 +33,7 @@ export const updateDeveloper = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       message: "Developer updated successfully",
-      developer,
+      data: developer,
     });
   } catch (error) {
     logger.error("Error in addDeveloper controller:", error);

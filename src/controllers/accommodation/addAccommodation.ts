@@ -26,7 +26,7 @@ export const addAccommodation = async (req: Request, res: Response) => {
 
     return res.status(201).json({
       message: "Accommodation added successfully",
-      accommodation,
+      data: accommodation,
     });
   } catch (error) {
     logger.error("Error in addAccommodation controller:", error);

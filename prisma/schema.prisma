@@ -125,7 +125,8 @@ model Admin {
 }
 
 model Developer {
-  id          String @id @default(cuid())
+  id          String   @id @default(cuid())
+  logo        String?
   name        String
   description String
   createdAt   DateTime @default(now())
@@ -138,8 +139,8 @@ model Developer {
 }
 
 model Area {
-  id        String @id @default(cuid())
-  image     String
+  id        String   @id @default(cuid())
+  image     String[]
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -152,7 +153,7 @@ model Area {
 }
 
 model Community {
-  id          String @id @default(cuid())
+  id          String   @id @default(cuid())
   name        String
   description String
   areaId      String
@@ -167,8 +168,8 @@ model Community {
 }
 
 model Accommodation {
-  id        String @id @default(cuid())
-  value     String @unique
+  id        String   @id @default(cuid())
+  value     String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -179,8 +180,8 @@ model Accommodation {
 }
 
 model Possession {
-  id        String @id @default(cuid())
-  value     String @unique
+  id        String   @id @default(cuid())
+  value     String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -191,7 +192,7 @@ model Possession {
 }
 
 model PaymentPlan {
-  id        String @id @default(cuid())
+  id        String   @id @default(cuid())
   name      String
   value     String
   createdAt DateTime @default(now())
@@ -265,7 +266,7 @@ model PropertyContact {
 }
 
 model Contact {
-  id        String @id @default(cuid())
+  id        String   @id @default(cuid())
   name      String
   phone     String
   email     String
@@ -278,7 +279,7 @@ model Contact {
 }
 
 model AgentQuery {
-  id        String @id @default(cuid())
+  id        String   @id @default(cuid())
   name      String
   phone     String
   email     String

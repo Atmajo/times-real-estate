@@ -13,6 +13,7 @@ export const loginSchema = z.object({
 });
 
 export const addDeveloperSchema = z.object({
+  logo: z.url({ message: "Provide a valid logo URL" }).optional(),
   name: z.string().min(1, "Name is required"),
   description: z
     .string()
@@ -20,6 +21,7 @@ export const addDeveloperSchema = z.object({
 });
 
 export const updateDeveloperSchema = z.object({
+  logo: z.url({ message: "Provide a valid logo URL" }).optional(),
   name: z.string().optional(),
   description: z.string().optional(),
 });
@@ -27,12 +29,14 @@ export const updateDeveloperSchema = z.object({
 // Area schemas
 export const addAreaSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  image: z.url({ message: "Provide a valid link" }),
+  image: z
+    .array(z.url({ message: "Provide a valid link" }))
+    .min(1, "At least one image is required"),
 });
 
 export const updateAreaSchema = z.object({
   name: z.string().optional(),
-  image: z.url({ message: "Provide a valid link" }).optional(),
+  image: z.array(z.url({ message: "Provide a valid link" })).optional(),
 });
 
 // Community schemas

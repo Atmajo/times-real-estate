@@ -18,7 +18,7 @@ export const getArea = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Area not found" });
     }
 
-    return res.status(200).json({ area });
+    return res.status(200).json({ data: area });
   } catch (error) {
     logger.error("Error in getArea controller:", error);
     res.status(500).json({ error: "Failed to get area" });

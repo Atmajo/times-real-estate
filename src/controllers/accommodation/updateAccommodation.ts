@@ -33,7 +33,7 @@ export const updateAccommodation = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       message: "Accommodation updated successfully",
-      accommodation,
+      data: accommodation,
     });
   } catch (error) {
     logger.error("Error in updateAccommodation controller:", error);

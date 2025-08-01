@@ -27,7 +27,7 @@ export const addArea = async (req: Request, res: Response) => {
 
     return res.status(201).json({
       message: "Area added successfully",
-      area,
+      data: area,
     });
   } catch (error) {
     logger.error("Error in addArea controller:", error);

@@ -16,6 +16,7 @@ import { collectionRouter } from "./collectionRouter";
 import { requestTourRouter } from "./requestTourRouter";
 import { fileRouter } from "./fileRouter";
 import { agentRouter } from "./agentRouter";
+import { userRouter } from "./userRouter";
 
 const router = Router();
 
@@ -46,6 +47,7 @@ router.get("/logs", (req: Request, res: Response) => {
 });
 
 // Protected routes
+router.use("/user", verifyToken, userRouter);
 router.use("/developers", verifyToken, developerRouter);
 router.use("/areas", verifyToken, areaRouter);
 router.use("/communities", verifyToken, communityRouter);
@@ -54,10 +56,10 @@ router.use("/possessions", verifyToken, possessionRouter);
 router.use("/payment-plans", verifyToken, paymentPlanRouter);
 router.use("/properties", verifyToken, propertyRouter);
 router.use("/property-contacts", verifyToken, propertyContactRouter);
-router.use("/contacts", verifyToken, contactRouter);
+router.use("/contacts", contactRouter);
 router.use("/collections", verifyToken, collectionRouter);
 router.use("/request-tours", verifyToken, requestTourRouter);
-router.use("/agent", verifyToken, agentRouter);
+router.use("/agent", agentRouter);
 router.use("/file", verifyToken, fileRouter);
 
 export { router as indexRouter };

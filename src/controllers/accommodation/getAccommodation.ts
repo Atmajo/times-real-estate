@@ -17,7 +17,7 @@ export const getAccommodation = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Accommodation not found" });
     }
 
-    return res.status(200).json({ accommodation });
+    return res.status(200).json({ data: accommodation });
   } catch (error) {
     logger.error("Error in getAccommodation controller:", error);
     res.status(500).json({ error: "Failed to get accommodation" });
