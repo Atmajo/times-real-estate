@@ -22,11 +22,7 @@ export const verifyToken = (
   next: NextFunction
 ) => {
   try {
-    const cookie =
-      (req.headers?.cookie?.match(/token=([^;]+)/) as unknown as string)[1] ||
-      req.cookies;
-
-    const token = cookie;
+    const token = req.headers.authorization?.split(" ")[1];
 
     if (!token) {
       res.status(401).json({ error: "Unauthorized" });
