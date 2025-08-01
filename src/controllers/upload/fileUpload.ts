@@ -31,7 +31,7 @@ export const fileUpload = async (req: Request, res: Response) => {
     });
   } catch (error) {
     if (error instanceof Error) {
-      logger.error("File upload error:", error.message);
+      logger.error("File upload error");
       return res.status(500).json({
         message: "Internal server error",
         details: error.message,

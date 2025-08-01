@@ -80,6 +80,7 @@ model Collection {
   userId     String
   propertyId String
   createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   // Relations
   user       User     @relation(fields: [userId], references: [id])
@@ -99,6 +100,7 @@ model RequestTour {
   email      String
   message    String
   createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
   // Relations
   user     User     @relation(fields: [userId], references: [id])
@@ -126,6 +128,8 @@ model Developer {
   id          String @id @default(cuid())
   name        String
   description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   // Relations
   properties Property[]
@@ -134,9 +138,11 @@ model Developer {
 }
 
 model Area {
-  id    String @id @default(cuid())
-  image String
-  name  String
+  id        String @id @default(cuid())
+  image     String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
   communities Community[]
@@ -150,6 +156,8 @@ model Community {
   name        String
   description String
   areaId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   // Relations
   area       Area       @relation(fields: [areaId], references: [id])
@@ -159,8 +167,10 @@ model Community {
 }
 
 model Accommodation {
-  id    String @id @default(cuid())
-  value String @unique
+  id        String @id @default(cuid())
+  value     String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
   properties Property[]
@@ -169,8 +179,10 @@ model Accommodation {
 }
 
 model Possession {
-  id    String @id @default(cuid())
-  value String @unique
+  id        String @id @default(cuid())
+  value     String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
   properties Property[]
@@ -179,9 +191,11 @@ model Possession {
 }
 
 model PaymentPlan {
-  id    String @id @default(cuid())
-  name  String
-  value String
+  id        String @id @default(cuid())
+  name      String
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
   properties Property[]
@@ -213,6 +227,7 @@ model Property {
   long                String
   availableDates      DateTime[]
   createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
 
   // Relations
   developer        Developer         @relation(fields: [developerId], references: [id], onDelete: Cascade)
@@ -240,6 +255,8 @@ model PropertyContact {
   email      String
   type       PropertyUserType
   message    String
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
 
   // Relations
   property Property @relation(fields: [propertyId], references: [id])
@@ -248,22 +265,26 @@ model PropertyContact {
 }
 
 model Contact {
-  id      String @id @default(cuid())
-  name    String
-  phone   String
-  email   String
-  type    String
-  message String
+  id        String @id @default(cuid())
+  name      String
+  phone     String
+  email     String
+  type      String
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("contact")
 }
 
 model AgentQuery {
-  id      String @id @default(cuid())
-  name    String
-  phone   String
-  email   String
-  message String
+  id        String @id @default(cuid())
+  name      String
+  phone     String
+  email     String
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("agentQuery")
 }
