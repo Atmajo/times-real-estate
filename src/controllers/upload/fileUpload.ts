@@ -16,24 +16,29 @@ export const fileUpload = async (req: Request, res: Response) => {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-  if (!req.file) {
+  if (!req.files || !Array.isArray(req.files) || req.files.length === 0) {
     return res.status(500).json({ message: "File missing" });
   }
 
-  if (!acceptedFileTypes.includes(req.file.mimetype)) {
-    return res.status(500).json({ message: "Invalid file" });
+  for (const file of req.files) {
+    if (!acceptedFileTypes.includes(file.mimetype)) {
+      return res.status(500).json({ message: "Invalid file" });
+    }
   }
 
   try {
     const { email } = req.user;
 
-    const { s3FileUrl } = await uploadFile(req.file, email);
+    const uploadPromises = req.files.map((file) => uploadFile(file, email));
+    const uploadResults = await Promise.all(uploadPromises);
 
-    await fs.unlink(req.file.path);
+    const s3FileUrls = uploadResults.map((result) => result.s3FileUrl);
+
+    await Promise.all(req.files.map((file) => fs.unlink(file.path)));
 
     return res.status(200).json({
       message: "File uploaded",
-      s3FileUrl,
+      s3FileUrls: s3FileUrls,
     });
   } catch (error) {
     if (error instanceof Error) {
