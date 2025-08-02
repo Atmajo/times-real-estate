@@ -1,12 +1,15 @@
 import { Router } from "express";
-import { verifyToken } from "@/middlewares/token";
 import multer from "multer";
 import { fileUpload } from "@/controllers/upload/fileUpload";
+import { fileDownload } from "@/controllers/upload/fileDownload";
+import { fileDelete } from "@/controllers/upload/fileDelete";
 
 const router = Router();
 
 const upload = multer({ dest: "uploads/", limits: { fileSize: 1000000 } });
 
 router.post("/upload", upload.single("file"), fileUpload);
+router.delete("/delete", fileDelete);
+router.post("/download", fileDownload);
 
 export { router as fileRouter };

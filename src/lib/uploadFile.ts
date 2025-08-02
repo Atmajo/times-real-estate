@@ -1,9 +1,4 @@
-import {
-  S3Client,
-  PutObjectCommand,
-  DeleteObjectCommand,
-  GetObjectCommand,
-} from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import fs from "fs/promises";
 import path from "path";
 import { hashFile } from "./hashFile";

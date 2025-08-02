@@ -6,6 +6,10 @@ import { validator } from "@/lib/validator";
 import { getPropertiesQuerySchema } from "@/schemas";
 
 export const getProperties = async (req: Request, res: Response) => {
+  if (!req.user) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
   try {
     // Validate query parameters
     const validatedQuery = validator({
@@ -49,7 +53,8 @@ export const getProperties = async (req: Request, res: Response) => {
       property_features,
     } = validatedQuery;
 
-    const where: any = {};
+    const where: any =
+      req.user.role === "ADMIN" ? {} : { adminId: req.user.id };
 
     if (status) where.status = status;
     if (type) where.type = type;
@@ -187,8 +192,6 @@ export const getProperties = async (req: Request, res: Response) => {
         developer: true,
         community: true,
         paymentPlan: true,
-        accommodation: true,
-        possession: true,
         area: true,
         propertyContacts: true,
       },
@@ -211,11 +214,18 @@ export const getProperties = async (req: Request, res: Response) => {
 };
 
 export const getProperty = async (req: Request, res: Response) => {
+  if (!req.user) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
   try {
     const { id } = req.params;
 
     const property = await prisma.property.findUnique({
-      where: { id },
+      where: {
+        id,
+        ...(req.user.role === "AGENT" && { adminId: req.user.id }),
+      },
       include: {
         developer: true,
         community: {
@@ -224,8 +234,6 @@ export const getProperty = async (req: Request, res: Response) => {
           },
         },
         paymentPlan: true,
-        accommodation: true,
-        possession: true,
         area: true,
         propertyContacts: true,
       },
@@ -256,10 +264,10 @@ export const getProperty = async (req: Request, res: Response) => {
         price: `$${property.price.toLocaleString()}`,
         downPayment: `$${property.downPayment.toLocaleString()}`,
         paymentPlan: property.paymentPlan?.name || "N/A",
-        accommodation: property.accommodation?.value || "N/A",
-        possession: property.possession?.value || "N/A",
+        accommodation: property.accommodation || "N/A",
+        possession: property.possession || "N/A",
       },
-      
+
       interiorFeatures: {
         bedroomsAndBathrooms: {
           bedrooms: amenities?.beds || "N/A",

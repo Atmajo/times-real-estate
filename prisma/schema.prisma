@@ -167,30 +167,6 @@ model Community {
   @@map("community")
 }
 
-model Accommodation {
-  id        String   @id @default(cuid())
-  value     String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relations
-  properties Property[]
-
-  @@map("accomodation")
-}
-
-model Possession {
-  id        String   @id @default(cuid())
-  value     String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relations
-  properties Property[]
-
-  @@map("possession")
-}
-
 model PaymentPlan {
   id        String   @id @default(cuid())
   name      String
@@ -208,10 +184,12 @@ model Property {
   id                  String        @id @default(cuid())
   developerId         String
   communityId         String
-  agentId             String?
+  adminId             String?
   images              String[]
   name                String
   overview            String
+  accommodation       String
+  possession          String
   status              Status
   type                PropertyTypes
   isFeatured          Boolean
@@ -233,12 +211,8 @@ model Property {
   // Relations
   developer        Developer         @relation(fields: [developerId], references: [id], onDelete: Cascade)
   community        Community         @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  admin            Admin?            @relation(fields: [adminId], references: [id], onDelete: Cascade)
   paymentPlan      PaymentPlan       @relation(fields: [paymentPlanId], references: [id])
-  agent            Admin?            @relation(fields: [agentId], references: [id], onDelete: Cascade)
-  accommodation    Accommodation     @relation(fields: [accommodationId], references: [id])
-  accommodationId  String
-  possession       Possession        @relation(fields: [possessionId], references: [id])
-  possessionId     String
   area             Area              @relation(fields: [areaId], references: [id])
   areaId           String
   collection       Collection[]

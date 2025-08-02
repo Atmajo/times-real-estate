@@ -52,24 +52,6 @@ export const updateCommunitySchema = z.object({
   areaId: z.string().optional(),
 });
 
-// Accommodation schemas
-export const addAccommodationSchema = z.object({
-  value: z.string().min(1, "Value is required"),
-});
-
-export const updateAccommodationSchema = z.object({
-  value: z.string().optional(),
-});
-
-// Possession schemas
-export const addPossessionSchema = z.object({
-  value: z.string().min(1, "Value is required"),
-});
-
-export const updatePossessionSchema = z.object({
-  value: z.string().optional(),
-});
-
 // PaymentPlan schemas
 export const addPaymentPlanSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -541,9 +523,12 @@ export const getPropertiesQuerySchema = z.object({
 export const addPropertySchema = z.object({
   developerId: z.string().min(1, "Developer ID is required"),
   communityId: z.string().min(1, "Community ID is required"),
+  areaId: z.string().min(1, "Area ID is required"),
   images: z.array(z.string().url()).min(1, "At least one image is required"),
   name: z.string().min(1, "Name is required"),
   overview: z.string().min(1, "Overview is required"),
+  accommodation: z.string().min(1, "Accommodation is required"),
+  possession: z.string().min(1, "Possession is required"),
   status: z.enum(["Coming_Soon", "Offplan", "Ready_To_Move", "Resale"]),
   type: z.enum([
     "Apartments",
@@ -558,10 +543,6 @@ export const addPropertySchema = z.object({
     "Lofts",
   ]),
   isFeatured: z.boolean(),
-  accommodation: z
-    .array(z.string())
-    .min(1, "At least one accommodation is required"),
-  possession: z.string().min(1, "Possession is required"),
   size: z.number().positive("Size must be positive"),
   downPayment: z.number().positive("Down payment must be positive"),
   paymentPlanId: z.string().min(1, "Payment plan ID is required"),
@@ -573,17 +554,20 @@ export const addPropertySchema = z.object({
     .string()
     .url("Payment plan brochure must be a valid URL"),
   price: z.number().positive("Price must be positive"),
-  accommodationId: z.string().min(1, "Accommodation ID is required"),
-  possessionId: z.string().min(1, "Possession ID is required"),
-  areaId: z.string().min(1, "Area ID is required"),
+  lat: z.string().min(1, "Latitude is required"),
+  long: z.string().min(1, "Longitude is required"),
+  availableDates: z.array(z.date()).optional(),
 });
 
 export const updatePropertySchema = z.object({
   developerId: z.string().optional(),
   communityId: z.string().optional(),
+  areaId: z.string().optional(),
   images: z.array(z.string().url()).optional(),
   name: z.string().optional(),
   overview: z.string().optional(),
+  accommodation: z.string().optional(),
+  possession: z.string().optional(),
   status: z
     .enum(["Coming_Soon", "Offplan", "Ready_To_Move", "Resale"])
     .optional(),
@@ -602,8 +586,6 @@ export const updatePropertySchema = z.object({
     ])
     .optional(),
   isFeatured: z.boolean().optional(),
-  accommodation: z.array(z.string()).optional(),
-  possession: z.string().optional(),
   size: z.number().positive().optional(),
   downPayment: z.number().positive().optional(),
   paymentPlanId: z.string().optional(),
@@ -613,9 +595,9 @@ export const updatePropertySchema = z.object({
   floorPlanBrochure: z.string().url().optional(),
   paymentPlanBrochure: z.string().url().optional(),
   price: z.number().positive().optional(),
-  accommodationId: z.string().optional(),
-  possessionId: z.string().optional(),
-  areaId: z.string().optional(),
+  lat: z.string().optional(),
+  long: z.string().optional(),
+  availableDates: z.array(z.date()).optional(),
 });
 
 // PropertyContact schemas
