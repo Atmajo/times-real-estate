@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/sendEmail";
 import { verifyOtpTemplate } from "@/templates/verifyOtp";
 
-export const sendOtp = async (to: string, type: string) => {
+export const sendOtp = async (to: string, type?: string) => {
   const otp = generateOtp();
   const subject = "Your OTP Code";
   const expiresIn = new Date(Date.now() + 10 * 60 * 1000);
