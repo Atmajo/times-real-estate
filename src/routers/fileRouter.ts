@@ -6,7 +6,7 @@ import { fileDelete } from "@/controllers/upload/fileDelete";
 
 const router = Router();
 
-const upload = multer({ dest: "uploads/", limits: { fileSize: 1000000 } });
+const upload = multer({ dest: "uploads/" });
 
 router.post("/upload", upload.single("file"), fileUpload);
 router.delete("/delete", fileDelete);
