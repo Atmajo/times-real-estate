@@ -3,7 +3,13 @@ import { uploadFile } from "@/lib/uploadFile";
 import logger from "@/logger/logger";
 import fs from "fs/promises";
 
-const acceptedFileTypes = ["image/jpeg", "image/png", "application/pdf"];
+const acceptedFileTypes = [
+  "image/jpeg",
+  "image/jpg",
+  "image/webp",
+  "image/png",
+  "application/pdf",
+];
 
 export const fileUpload = async (req: Request, res: Response) => {
   if (!req.user) {
