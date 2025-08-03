@@ -5,6 +5,8 @@ import { paginate } from "@/lib/paginate";
 
 export const getDevelopers = async (req: Request, res: Response) => {
   try {
+    const { all } = req.query;
+
     const developers = await prisma.developer.findMany({
       orderBy: { createdAt: "desc" },
     });
@@ -18,6 +20,10 @@ export const getDevelopers = async (req: Request, res: Response) => {
       Number(req.query.page) || 1,
       Number(req.query.limit) || 10
     );
+
+    if (all) {
+      return res.status(200).json({ data: developers });
+    }
 
     return res.status(200).json({ page, limit, totalPages, totalItems, items });
   } catch (error) {

@@ -5,6 +5,8 @@ import { paginate } from "@/lib/paginate";
 
 export const getCommunities = async (req: Request, res: Response) => {
   try {
+    const { all } = req.query;
+
     const communities = await prisma.community.findMany({
       include: {
         area: true,
@@ -17,6 +19,10 @@ export const getCommunities = async (req: Request, res: Response) => {
 
     if (!communities) {
       return res.status(404).json({ error: "Communities not found" });
+    }
+
+    if (all) {
+      return res.status(200).json({ data: communities });
     }
 
     const { page, limit, totalPages, totalItems, items } = paginate(
