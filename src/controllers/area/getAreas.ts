@@ -5,6 +5,8 @@ import { paginate } from "@/lib/paginate";
 
 export const getAreas = async (req: Request, res: Response) => {
   try {
+    const { all } = req.query;
+
     const areas = await prisma.area.findMany({
       include: {
         communities: {
@@ -27,7 +29,13 @@ export const getAreas = async (req: Request, res: Response) => {
       Number(req.query.limit) || 10
     );
 
-    return res.status(200).json({ page, limit, totalPages, totalItems, items });
+    if (all) {
+      return res.status(200).json({ data: areas });
+    } else {
+      return res
+        .status(200)
+        .json({ page, limit, totalPages, totalItems, items });
+    }
   } catch (error) {
     logger.error("Error in getAreas controller:", error);
     res.status(500).json({ error: "Failed to get areas" });
