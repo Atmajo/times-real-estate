@@ -31,7 +31,7 @@ export const addQuery = async (req: Request, res: Response) => {
       data: query,
     });
   } catch (error) {
-    logger.error("Error in addArea controller:", error);
+    logger.error("Error in addQuery controller:", error);
     res.status(500).json({ error: "Failed to add query" });
   }
 };
