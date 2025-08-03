@@ -287,6 +287,7 @@ export const getPropertiesQuerySchema = z.object({
   // Basic filters
   page: z.string().optional(),
   limit: z.string().optional(),
+  sort: z.enum(["asc", "desc"]).optional(),
   status: z
     .enum(["Coming_Soon", "Offplan", "Ready_To_Move", "Resale"])
     .optional(),

@@ -19,8 +19,9 @@ export const getProperties = async (req: Request, res: Response) => {
     if (!validatedQuery) {
       return res.status(400).json({ error: "Invalid query parameters" });
     }
-
+    
     const {
+      sort,
       status,
       type,
       isFeatured,
@@ -196,7 +197,7 @@ export const getProperties = async (req: Request, res: Response) => {
         propertyContacts: true,
       },
       orderBy: {
-        createdAt: "desc",
+        createdAt: sort === "desc" ? "desc" : "asc",
       },
     });
 

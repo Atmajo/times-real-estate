@@ -37,7 +37,7 @@ export const register = async (req: Request, res: Response) => {
     });
 
     const token = jwt.sign(
-      { userId: user.id, email: user.email, role: user.role },
+      { id: user.id, email: user.email, role: user.role },
       process.env.JWT_SECRET as string,
       { expiresIn: "5M" }
     );
