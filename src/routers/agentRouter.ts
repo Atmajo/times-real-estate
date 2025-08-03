@@ -8,7 +8,7 @@ import { getQueryById } from "@/controllers/agent/query/getQueryById";
 const router = Router();
 
 // Route to Agents
-router.get("/agents", verifyToken, getAgents);
+router.get("/", verifyToken, getAgents);
 
 // Route to Queries
 router.get("/query", verifyToken, getQueries);
