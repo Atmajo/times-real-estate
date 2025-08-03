@@ -7,7 +7,9 @@ export const deleteAgent = async (req: Request, res: Response) => {
     await prisma.admin.delete({
       where: { id: req.params.id },
     });
-    res.status(204).send();
+    return res.status(200).json({
+      message: "Query deleted successfully",
+    });
   } catch (error) {
     logger.error("Error deleting agent:", error);
     res.status(500).json({ message: "Internal server error" });
