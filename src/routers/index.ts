@@ -46,7 +46,7 @@ router.get("/logs", (req: Request, res: Response) => {
 });
 
 // Protected routes
-router.use("/user", verifyToken, userRouter);
+router.use("/users", verifyToken, userRouter);
 router.use("/developers", verifyToken, developerRouter);
 router.use("/areas", verifyToken, areaRouter);
 router.use("/communities", verifyToken, communityRouter);
