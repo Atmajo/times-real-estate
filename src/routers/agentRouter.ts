@@ -7,6 +7,7 @@ import { getQueryById } from "@/controllers/agent/query/getQueryById";
 import { deleteQuery } from "@/controllers/agent/query/deleteQuery";
 import { deleteAgent } from "@/controllers/agent/deleteAgent";
 import { updateAgent } from "@/controllers/agent/updateAgent";
+import { resendVerification } from "@/controllers/agent/resendVerification";
 
 const router = Router();
 
@@ -14,6 +15,9 @@ const router = Router();
 router.get("/", verifyToken, getAgents);
 router.patch("/", verifyToken, updateAgent);
 router.delete("/:id", verifyToken, deleteAgent);
+
+// Route for resending verification
+router.post("/resend-verification", resendVerification);
 
 // Route to Queries
 router.get("/query", verifyToken, getQueries);

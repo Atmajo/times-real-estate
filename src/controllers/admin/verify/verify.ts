@@ -29,7 +29,7 @@ export const verify = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Invalid OTP" });
     }
 
-    await prisma.user.update({
+    await prisma.admin.update({
       where: { email: req.user.email },
       data: { isVerified: true, otp: null, otpExpires: null },
     });

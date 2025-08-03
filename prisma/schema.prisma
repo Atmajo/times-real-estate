@@ -115,6 +115,7 @@ model Admin {
   email      String     @unique
   password   String?
   role       Usertype   @default(UNVERIFIED)
+  isVerified Boolean    @default(false)
   otp        String?
   otpExpires DateTime?
   createdAt  DateTime   @default(now())

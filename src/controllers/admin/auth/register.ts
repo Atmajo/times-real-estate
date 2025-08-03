@@ -44,7 +44,7 @@ export const register = async (req: Request, res: Response) => {
 
     // TODO: reset mail
     validatedData.role === "AGENT" && (await sendResetMail(user.email, token));
-
+    
     return res.status(200).json({
       message: "Registration successful",
     });
