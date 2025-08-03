@@ -9,8 +9,12 @@ export const getArea = async (req: Request, res: Response) => {
     const area = await prisma.area.findUnique({
       where: { id },
       include: {
-        communities: true,
-        properties: true,
+        communities: {
+          orderBy: { createdAt: "desc" },
+        },
+        properties: {
+          orderBy: { createdAt: "desc" },
+        },
       },
     });
 

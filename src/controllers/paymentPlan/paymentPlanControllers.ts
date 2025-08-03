@@ -33,6 +33,7 @@ export const getPaymentPlans = async (req: Request, res: Response) => {
   try {
     const paymentPlans = await prisma.paymentPlan.findMany({
       include: { properties: true },
+      orderBy: { createdAt: "desc" },
     });
 
     const { page, limit, totalPages, totalItems, items } = paginate(
@@ -53,7 +54,11 @@ export const getPaymentPlan = async (req: Request, res: Response) => {
     const { id } = req.params;
     const paymentPlan = await prisma.paymentPlan.findUnique({
       where: { id },
-      include: { properties: true },
+      include: { 
+        properties: {
+          orderBy: { createdAt: "desc" },
+        },
+      },
     });
 
     if (!paymentPlan) {

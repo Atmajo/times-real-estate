@@ -30,7 +30,7 @@ export const addContact = async (req: Request, res: Response) => {
 export const getContacts = async (req: Request, res: Response) => {
   try {
     const contacts = await prisma.contact.findMany({
-      orderBy: { id: "desc" },
+      orderBy: { createdAt: "desc" },
     });
 
     const { page, limit, totalPages, totalItems, items } = paginate(

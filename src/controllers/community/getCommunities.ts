@@ -8,8 +8,11 @@ export const getCommunities = async (req: Request, res: Response) => {
     const communities = await prisma.community.findMany({
       include: {
         area: true,
-        properties: true,
+        properties: {
+          orderBy: { createdAt: "desc" },
+        },
       },
+      orderBy: { createdAt: "desc" },
     });
 
     if (!communities) {

@@ -66,7 +66,7 @@ export const getPropertyContacts = async (req: Request, res: Response) => {
         },
       },
       orderBy: {
-        id: 'desc',
+        createdAt: 'desc',
       },
     });
 

@@ -5,7 +5,9 @@ import { paginate } from "@/lib/paginate";
 
 export const getDevelopers = async (req: Request, res: Response) => {
   try {
-    const developers = await prisma.developer.findMany();
+    const developers = await prisma.developer.findMany({
+      orderBy: { createdAt: "desc" },
+    });
 
     if (!developers) {
       return res.status(404).json({ error: "Developer not found" });

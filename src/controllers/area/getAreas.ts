@@ -7,9 +7,14 @@ export const getAreas = async (req: Request, res: Response) => {
   try {
     const areas = await prisma.area.findMany({
       include: {
-        communities: true,
-        properties: true,
+        communities: {
+          orderBy: { createdAt: "desc" },
+        },
+        properties: {
+          orderBy: { createdAt: "desc" },
+        },
       },
+      orderBy: { createdAt: "desc" },
     });
 
     if (!areas) {

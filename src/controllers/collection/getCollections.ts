@@ -14,7 +14,10 @@ export const getCollections = async (req: Request, res: Response) => {
     }
 
     const query = req.query;
-    const validatedQuery = validator({ schema: getCollectionsSchema, body: query });
+    const validatedQuery = validator({
+      schema: getCollectionsSchema,
+      body: query,
+    });
 
     if (!validatedQuery) {
       return res.status(400).json({ error: "Invalid query parameters" });
@@ -32,10 +35,10 @@ export const getCollections = async (req: Request, res: Response) => {
             community: true,
             area: true,
             paymentPlan: true,
-          }
-        }
+          },
+        },
       },
-      orderBy: { createdAt: "desc" }
+      orderBy: { createdAt: "desc" },
     });
 
     const paginatedResult = paginate(collections, page, limit);
@@ -43,7 +46,7 @@ export const getCollections = async (req: Request, res: Response) => {
     logger.info(`Collections retrieved for user ${userId}`);
     res.status(200).json({
       message: "Collections retrieved successfully",
-      ...paginatedResult
+      ...paginatedResult,
     });
   } catch (error) {
     logger.error(`Error retrieving collections: ${error}`);
@@ -65,9 +68,9 @@ export const getCollection = async (req: Request, res: Response) => {
     }
 
     const collection = await prisma.collection.findFirst({
-      where: { 
+      where: {
         id,
-        userId 
+        userId,
       },
       include: {
         user: {
@@ -75,7 +78,7 @@ export const getCollection = async (req: Request, res: Response) => {
             id: true,
             name: true,
             email: true,
-          }
+          },
         },
         properties: {
           include: {
@@ -83,9 +86,9 @@ export const getCollection = async (req: Request, res: Response) => {
             community: true,
             area: true,
             paymentPlan: true,
-          }
-        }
-      }
+          },
+        },
+      },
     });
 
     if (!collection) {

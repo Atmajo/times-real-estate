@@ -4,7 +4,9 @@ import { Request, Response } from "express";
 
 export const getQueries = async (req: Request, res: Response) => {
   try {
-    const queries = await prisma.agentQuery.findMany();
+    const queries = await prisma.agentQuery.findMany({
+      orderBy: { createdAt: "desc" },
+    });
     res.status(200).json({ data: queries });
   } catch (error) {
     logger.error("Error fetching queries:", error);
