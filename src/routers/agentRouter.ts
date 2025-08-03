@@ -13,7 +13,7 @@ const router = Router();
 // Route to Agents
 router.get("/", verifyToken, getAgents);
 router.patch("/", verifyToken, updateAgent);
-router.delete("/", verifyToken, deleteAgent);
+router.delete("/:id", verifyToken, deleteAgent);
 
 // Route to Queries
 router.get("/query", verifyToken, getQueries);
