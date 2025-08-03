@@ -17,12 +17,8 @@ export const addArea = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Invalid data" });
     }
 
-    const { name, image } = validatedData;
     const area = await prisma.area.create({
-      data: {
-        name,
-        image,
-      },
+      data: validatedData,
     });
 
     return res.status(201).json({

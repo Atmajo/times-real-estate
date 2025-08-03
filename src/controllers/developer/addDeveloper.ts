@@ -17,13 +17,8 @@ export const addDeveloper = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Invalid data" });
     }
 
-    const { logo, name, description } = validatedData;
     const developer = await prisma.developer.create({
-      data: {
-        logo,
-        name,
-        description,
-      },
+      data: validatedData,
     });
 
     return res.status(201).json({
