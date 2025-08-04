@@ -35,9 +35,9 @@ export const userRegister = async (req: Request, res: Response) => {
     });
 
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: "user" },
+      { id: user.id, email: user.email, role: user.role },
       process.env.JWT_SECRET as string,
-      { expiresIn: "30d" }
+      { expiresIn: "5M" }
     );
 
     await sendOtp(validatedData.email, "user");

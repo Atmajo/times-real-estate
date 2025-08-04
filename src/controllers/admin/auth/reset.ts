@@ -2,7 +2,6 @@ import { prisma } from "@/lib/prisma";
 import logger from "@/logger/logger";
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import { sendOtp } from "@/mails/sendOtp";
 
 export const reset = async (req: Request, res: Response) => {
   if (!req.user) {
@@ -11,14 +10,36 @@ export const reset = async (req: Request, res: Response) => {
 
   try {
     const { password } = req.body;
+    const { otp } = req.user;
 
-    const existingUser = await prisma.admin.findUnique({
-      where: { email: req.user.email },
+    if (!otp) {
+      return res.status(400).json({ message: "OTP is required" });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
     });
 
-    if (!existingUser) {
-      return res.status(409).json({ message: "User doesn't exists" });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
+
+    if (!user.otp) {
+      return res.status(400).json({ message: "OTP is not set" });
+    }
+
+    if (user.otpExpires && user.otpExpires < new Date()) {
+      return res.status(400).json({ message: "OTP has expired" });
+    }
+
+    if (otp !== user.otp) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    await prisma.admin.update({
+      where: { email: req.user.email },
+      data: { isVerified: true, otp: null, otpExpires: null },
+    });
 
     const hashedPassword = password && (await bcrypt.hash(password, 10));
 
@@ -29,17 +50,8 @@ export const reset = async (req: Request, res: Response) => {
       },
     });
 
-    const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
-      process.env.JWT_SECRET as string,
-      { expiresIn: "5M" }
-    );
-
-    await sendOtp(req.user.email, "admin");
-
     return res.status(200).json({
       message: "Password reset successful",
-      token: token,
       success: true,
     });
   } catch (error) {

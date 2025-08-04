@@ -1,3 +1,5 @@
+import { generateOtp } from "@/lib/generateOtp";
+import { prisma } from "@/lib/prisma";
 import { sendResetMail } from "@/mails/sendResetMail";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
@@ -5,12 +7,21 @@ import jwt from "jsonwebtoken";
 export const resendVerification = async (req: Request, res: Response) => {
   try {
     const { id, email, role } = req.body;
+
+    const user = await prisma.admin.update({
+      where: { id },
+      data: {
+        otp: generateOtp(),
+        otpExpires: new Date(Date.now() + 5 * 60 * 1000),
+      }
+    });
+    
     const token = jwt.sign(
-      { id: id, email: email, role: role },
+      { id: user.id, email: user.email, role: user.role, otp: user.otp },
       process.env.JWT_SECRET as string,
       { expiresIn: "5M" }
     );
-
+    
     role === "AGENT" && (await sendResetMail(email, token));
 
     return res.status(200).json({

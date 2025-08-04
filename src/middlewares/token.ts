@@ -9,6 +9,7 @@ declare global {
         id: string;
         email: string;
         role: string;
+        otp?: string;
         iat: number;
         exp: number;
       };
@@ -33,6 +34,7 @@ export const verifyToken = (
       id: string;
       email: string;
       role: string;
+      otp?: string;
       iat: number;
       exp: number;
     };
