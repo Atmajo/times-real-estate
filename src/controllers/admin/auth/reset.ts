@@ -29,10 +29,17 @@ export const reset = async (req: Request, res: Response) => {
       },
     });
 
+    const token = jwt.sign(
+      { id: user.id, email: user.email, role: user.role },
+      process.env.JWT_SECRET as string,
+      { expiresIn: "5M" }
+    );
+
     await sendOtp(req.user.email, "admin");
 
     return res.status(200).json({
       message: "Password reset successful",
+      token: token,
       success: true,
     });
   } catch (error) {
