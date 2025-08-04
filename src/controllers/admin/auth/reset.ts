@@ -16,10 +16,10 @@ export const reset = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "OTP is required" });
     }
 
-    const user = await prisma.user.findUnique({
+    const user = await prisma.admin.findUnique({
       where: { id: req.user.id },
     });
-
+    
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
