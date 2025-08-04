@@ -2,11 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { Request, Response } from "express";
 
 export const deleteUser = async (req: Request, res: Response) => {
-  if (!req.user || !req.user.id) {
-    return res.status(400).json({ message: "Unauthorized" });
-  }
-
-  const userId = req.user.id;
+  const userId = req.params.id;
 
   try {
     await prisma.user.delete({

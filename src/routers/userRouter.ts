@@ -7,6 +7,6 @@ const router = Router();
 
 router.get("/", getUsers);
 router.get("/profile", profile);
-router.delete("/", deleteUser);
+router.delete("/:id", deleteUser);
 
 export { router as userRouter };
