@@ -49,7 +49,7 @@ router.get("/logs", (req: Request, res: Response) => {
 // Protected routes
 router.use("/users", verifyToken, userRouter);
 router.use("/developers", verifyToken, developerRouter);
-router.use("/areas", verifyToken, areaRouter);
+router.use("/areas", areaRouter);
 router.use("/communities", verifyToken, communityRouter);
 router.use("/payment-plans", verifyToken, paymentPlanRouter);
 router.use("/properties", verifyToken, propertyRouter);
