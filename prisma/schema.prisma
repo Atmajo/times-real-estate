@@ -249,8 +249,20 @@ model Contact {
   message   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
+  
   @@map("contact")
+}
+
+model Selling {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  email     String
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("selling")
 }
 
 model AgentQuery {
