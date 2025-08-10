@@ -55,26 +55,6 @@ enum Timeframe {
   ANYTIME
 }
 
-model User {
-  id          String        @id @default(cuid())
-  image       String?
-  name        String
-  email       String        @unique
-  password    String
-  role        Usertype      @default(USER)
-  isVerified  Boolean       @default(false)
-  otp         String?
-  otpExpires  DateTime?
-  phone       String?
-  address     String?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  collection  Collection[]
-  requestTour RequestTour[]
-
-  @@map("user")
-}
-
 model Collection {
   id         String   @id @default(cuid())
   userId     String
@@ -109,20 +89,28 @@ model RequestTour {
   @@map("requestTour")
 }
 
-model Admin {
-  id         String     @id @default(cuid())
+model User {
+  id         String    @id @default(cuid())
+  image      String?
   name       String
-  email      String     @unique
+  email      String    @unique
   password   String?
-  role       Usertype   @default(UNVERIFIED)
-  isVerified Boolean    @default(false)
+  role       Usertype  @default(USER)
+  isVerified Boolean   @default(false)
   otp        String?
   otpExpires DateTime?
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  property   Property[]
+  phone      String?
+  address    String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
-  @@map("admin")
+  // Relations
+  area        Area[]
+  property    Property[]
+  collection  Collection[]
+  requestTour RequestTour[]
+
+  @@map("user")
 }
 
 model Developer {
@@ -135,6 +123,7 @@ model Developer {
 
   // Relations
   properties Property[]
+  Community  Community[]
 
   @@map("developer")
 }
@@ -147,6 +136,7 @@ model Area {
   updatedAt DateTime @updatedAt
 
   // Relations
+  user        User[]
   communities Community[]
   properties  Property[]
 
@@ -157,13 +147,13 @@ model Community {
   id          String   @id @default(cuid())
   name        String
   description String
-  areaId      String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   // Relations
-  area       Area       @relation(fields: [areaId], references: [id])
+  area       Area[]
   properties Property[]
+  developer  Developer[]
 
   @@map("community")
 }
@@ -183,10 +173,11 @@ model PaymentPlan {
 
 model Property {
   id                  String        @id @default(cuid())
+  images              String[]
   developerId         String
   communityId         String
-  adminId             String?
-  images              String[]
+  userId              String?
+  areaId              String
   name                String
   overview            String
   accommodation       String
@@ -212,10 +203,9 @@ model Property {
   // Relations
   developer        Developer         @relation(fields: [developerId], references: [id], onDelete: Cascade)
   community        Community         @relation(fields: [communityId], references: [id], onDelete: Cascade)
-  admin            Admin?            @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  user             User?             @relation(fields: [userId], references: [id], onDelete: Cascade)
   paymentPlan      PaymentPlan       @relation(fields: [paymentPlanId], references: [id])
   area             Area              @relation(fields: [areaId], references: [id])
-  areaId           String
   collection       Collection[]
   requestTour      RequestTour[]
   propertyContacts PropertyContact[]
@@ -249,7 +239,7 @@ model Contact {
   message   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
+
   @@map("contact")
 }
 
@@ -259,9 +249,10 @@ model Selling {
   phone     String
   email     String
   message   String
+  areaId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
+
   @@map("selling")
 }
 
@@ -270,6 +261,7 @@ model AgentQuery {
   name      String
   phone     String
   email     String
+  areaId    String[]
   message   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
