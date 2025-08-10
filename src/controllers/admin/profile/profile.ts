@@ -12,7 +12,7 @@ export const profile = async (req: Request, res: Response) => {
 
     console.log("Fetching profile for user ID:", req.user);
 
-    const profile = await prisma.admin.findUnique({
+    const profile = await prisma.user.findUnique({
       where: { id },
       select: {
         id: true,

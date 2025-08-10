@@ -5,7 +5,7 @@ import { Request, Response } from "express";
 export const getAgents = async (req: Request, res: Response) => {
   try {
     const { page, limit } = req.query;
-    const agents = await prisma.admin.findMany({
+    const agents = await prisma.user.findMany({
       where: {
         role: "AGENT",
       },

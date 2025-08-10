@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 
 export const deleteAgent = async (req: Request, res: Response) => {
   try {
-    await prisma.admin.delete({
+    await prisma.user.delete({
       where: { id: req.params.id },
     });
     return res.status(200).json({

@@ -16,7 +16,7 @@ export const reset = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "OTP is required" });
     }
 
-    const user = await prisma.admin.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id: req.user.id },
     });
     
@@ -36,14 +36,14 @@ export const reset = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Invalid OTP" });
     }
 
-    await prisma.admin.update({
+    await prisma.user.update({
       where: { email: req.user.email },
       data: { isVerified: true, otp: null, otpExpires: null },
     });
 
     const hashedPassword = password && (await bcrypt.hash(password, 10));
 
-    await prisma.admin.update({
+    await prisma.user.update({
       where: { email: req.user.email },
       data: {
         password: hashedPassword && hashedPassword,

@@ -8,7 +8,7 @@ export const resendVerification = async (req: Request, res: Response) => {
   try {
     const { id, email, role } = req.body;
 
-    const user = await prisma.admin.update({
+    const user = await prisma.user.update({
       where: { id },
       data: {
         otp: generateOtp(),

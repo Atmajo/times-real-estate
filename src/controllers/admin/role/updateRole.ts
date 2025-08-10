@@ -8,7 +8,7 @@ export const updateRole = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const { role } = req.body;
 
-    const existingUser = await prisma.admin.findUnique({
+    const existingUser = await prisma.user.findUnique({
       where: { id: userId },
     });
 
@@ -16,7 +16,7 @@ export const updateRole = async (req: Request, res: Response) => {
       return res.status(500).json({ message: "User not found" });
     }
 
-    await prisma.admin.update({
+    await prisma.user.update({
       where: { id: userId },
       data: { role: role as Usertype },
     });

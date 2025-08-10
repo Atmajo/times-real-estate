@@ -15,7 +15,7 @@ export const login = async (req: Request, res: Response) => {
       body,
     });
 
-    const admin = await prisma.admin.findUnique({
+    const admin = await prisma.user.findUnique({
       where: { email: validatedData.email },
     });
 

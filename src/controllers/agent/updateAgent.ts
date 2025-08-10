@@ -8,7 +8,7 @@ export const updateAgent = async (req: Request, res: Response) => {
   }
 
   try {
-    const agent = await prisma.admin.update({
+    const agent = await prisma.user.update({
       where: { id: req.user.id },
       data: req.body,
     });
