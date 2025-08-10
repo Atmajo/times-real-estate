@@ -8,7 +8,7 @@ export const defaultAdmin = async () => {
     const email = process.env.DEFAULT_EMAIL!;
     const password = process.env.DEFAULT_PASSWORD!;
 
-    const existingUser = await prisma.admin.findUnique({
+    const existingUser = await prisma.user.findUnique({
       where: { email: email },
     });
 
@@ -18,7 +18,7 @@ export const defaultAdmin = async () => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await prisma.admin.create({
+    const user = await prisma.user.create({
       data: {
         name: name,
         email: email,

@@ -49,7 +49,6 @@ export const addCommunitySchema = z.object({
 export const updateCommunitySchema = z.object({
   name: z.string().optional(),
   description: z.string().optional(),
-  areaId: z.string().optional(),
 });
 
 // PaymentPlan schemas

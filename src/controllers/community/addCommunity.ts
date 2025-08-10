@@ -19,7 +19,6 @@ export const addCommunity = async (req: Request, res: Response) => {
 
     const { name, description, areaId } = validatedData;
     
-    // Check if area exists
     const area = await prisma.area.findUnique({ where: { id: areaId } });
     if (!area) {
       return res.status(404).json({ error: "Area not found" });
@@ -29,7 +28,9 @@ export const addCommunity = async (req: Request, res: Response) => {
       data: {
         name,
         description,
-        areaId,
+        area: {
+          connect: { id: area.id },
+        },
       },
       include: {
         area: true,

@@ -47,6 +47,7 @@ export const login = async (req: Request, res: Response) => {
           name: admin.name,
           email: admin.email,
           role: admin.role,
+          isVerified: admin.isVerified,
         },
       },
     });

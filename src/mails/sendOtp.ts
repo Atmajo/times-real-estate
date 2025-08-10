@@ -9,24 +9,13 @@ export const sendOtp = async (to: string, type?: string) => {
   const expiresIn = new Date(Date.now() + 10 * 60 * 1000);
 
   const html = verifyOtpTemplate(otp);
-
-  if (type === "user") {
-    await prisma.user.update({
-      where: { email: to },
-      data: {
-        otp,
-        otpExpires: expiresIn,
-      },
-    });
-  } else {
-    await prisma.admin.update({
-      where: { email: to },
-      data: {
-        otp,
-        otpExpires: expiresIn,
-      },
-    });
-  }
+  await prisma.user.update({
+    where: { email: to },
+    data: {
+      otp,
+      otpExpires: expiresIn,
+    },
+  });
 
   await sendEmail(to, subject, html);
 };
