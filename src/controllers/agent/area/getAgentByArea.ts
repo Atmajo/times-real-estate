@@ -19,7 +19,7 @@ export const getAgentByArea = async (req: Request, res: Response) => {
     const agents = data.filter((agent) => agent.area.some((a) => a.name === area));
 
     if (all === "true") {
-      return res.status(200).json({ agents });
+      return res.status(200).json({ data: agents });
     }
     
     const paginatedData = paginate(
