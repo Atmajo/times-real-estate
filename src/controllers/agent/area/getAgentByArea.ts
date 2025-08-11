@@ -8,7 +8,7 @@ export const getAgentByArea = async (req: Request, res: Response) => {
       area: string;
       page: string;
       limit: string;
-      all: string;
+      all: string | null;
     };
 
     const areas = await prisma.area.findUnique({
@@ -21,7 +21,7 @@ export const getAgentByArea = async (req: Request, res: Response) => {
         return { ...u, password: null };
       }) || [];
     
-    if (all) {
+    if (all === "true") {
       return res.status(200).json({ agents });
     }
 
