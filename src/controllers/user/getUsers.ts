@@ -5,7 +5,9 @@ import { Request, Response } from "express";
 export const getUsers = async (req: Request, res: Response) => {
   try {
     const { page, limit } = req.query;
-    const users = await prisma.user.findMany();
+    const data = await prisma.user.findMany();
+
+    const users = data.filter((user) => user.role === "USER");
 
     const paginatedUsers = paginate(
       users,

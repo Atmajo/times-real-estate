@@ -11,20 +11,17 @@ export const getAgentByArea = async (req: Request, res: Response) => {
       all: string | null;
     };
 
-    const areas = await prisma.area.findUnique({
-      where: { name: area },
-      select: { user: true },
+    const data = await prisma.user.findMany({
+      where: { role: "AGENT" },
+      include: { area: true },
     });
 
-    const agents =
-      areas?.user.map((u) => {
-        return { ...u, password: null };
-      }) || [];
-    
+    const agents = data.filter((agent) => agent.area.some((a) => a.name === area));
+
     if (all === "true") {
       return res.status(200).json({ agents });
     }
-
+    
     const paginatedData = paginate(
       agents,
       Number(page) || 1,
