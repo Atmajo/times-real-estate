@@ -5,6 +5,7 @@ export const registerSchema = z.object({
   email: z.string().email("Invalid email format"),
   password: z.string().optional(),
   role: z.enum(["ADMIN", "AGENT", "MANAGER"]).optional(),
+  area: z.array(z.string().optional()),
 });
 
 export const loginSchema = z.object({
@@ -43,7 +44,7 @@ export const updateAreaSchema = z.object({
 export const addCommunitySchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z.string().min(1, "Description is required"),
-  areaId: z.string().min(1, "Area ID is required"),
+  areaId: z.array(z.string().min(1, "Area ID is required")),
 });
 
 export const updateCommunitySchema = z.object({

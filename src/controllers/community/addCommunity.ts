@@ -1,3 +1,4 @@
+import { Area } from "@/generated/prisma";
 import { prisma } from "@/lib/prisma";
 import { validator } from "@/lib/validator";
 import logger from "@/logger/logger";
@@ -18,18 +19,25 @@ export const addCommunity = async (req: Request, res: Response) => {
     }
 
     const { name, description, areaId } = validatedData;
-    
-    const area = await prisma.area.findUnique({ where: { id: areaId } });
-    if (!area) {
-      return res.status(404).json({ error: "Area not found" });
-    }
+
+    const areaPromises = areaId.map(async (element: any) => {
+      const foundArea = await prisma.area.findUnique({
+        where: { id: element },
+      });
+      return foundArea;
+    });
+
+    const areaResults = await Promise.all(areaPromises);
+    const area: Area[] = areaResults.filter(
+      (foundArea): foundArea is Area => foundArea !== null
+    );
 
     const community = await prisma.community.create({
       data: {
         name,
         description,
         area: {
-          connect: { id: area.id },
+          connect: area.map((a) => ({ id: a.id })),
         },
       },
       include: {

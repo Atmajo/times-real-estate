@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 import { registerSchema } from "@/schemas";
 import { sendResetMail } from "@/mails/sendResetMail";
 import { generateOtp } from "@/lib/generateOtp";
+import { Area } from "@/generated/prisma";
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -28,6 +29,18 @@ export const register = async (req: Request, res: Response) => {
     const hashedPassword =
       validatedData.password && (await bcrypt.hash(validatedData.password, 10));
 
+    const areaPromises = validatedData.area.map(async (element: any) => {
+      const foundArea = await prisma.area.findUnique({
+        where: { id: element },
+      });
+      return foundArea;
+    });
+    
+    const areaResults = await Promise.all(areaPromises);
+    const area: Area[] = areaResults.filter(
+      (foundArea): foundArea is Area => foundArea !== null
+    );
+
     const user = await prisma.user.create({
       data: {
         name: validatedData.name,
@@ -36,17 +49,21 @@ export const register = async (req: Request, res: Response) => {
         role: validatedData.role,
         otp: generateOtp(),
         otpExpires: new Date(Date.now() + 5 * 60 * 1000),
+        area: area && {
+          connect: area.map((a) => ({ id: a.id })),
+        },
       },
     });
-    
-    const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role, otp: user.otp },
-      process.env.JWT_SECRET as string,
-      { expiresIn: "5M" }
-    );
 
-    // TODO: reset mail
-    validatedData.role === "AGENT" && (await sendResetMail(user.email, token));
+    if (validatedData.role === "AGENT") {
+      const token = jwt.sign(
+        { id: user.id, email: user.email, role: user.role, otp: user.otp },
+        process.env.JWT_SECRET as string,
+        { expiresIn: "5M" }
+      );
+
+      await sendResetMail(user.email, token);
+    }
 
     return res.status(200).json({
       message: "Registration successful",
