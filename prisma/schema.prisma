@@ -249,7 +249,7 @@ model Selling {
   phone     String
   email     String
   message   String
-  areaId    String
+  area    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -261,7 +261,7 @@ model AgentQuery {
   name      String
   phone     String
   email     String
-  areaId    String[]
+  area    String[]
   message   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
