@@ -106,6 +106,7 @@ model User {
 
   // Relations
   area        Area[]
+  Selling     Selling[]
   property    Property[]
   collection  Collection[]
   requestTour RequestTour[]
@@ -249,9 +250,12 @@ model Selling {
   phone     String
   email     String
   message   String
-  area    String
+  area      String
+  agentId   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  agent User? @relation(fields: [agentId], references: [id])
 
   @@map("selling")
 }
@@ -261,7 +265,7 @@ model AgentQuery {
   name      String
   phone     String
   email     String
-  area    String[]
+  area      String[]
   message   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

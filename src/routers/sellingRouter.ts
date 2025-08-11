@@ -1,3 +1,4 @@
+import { assignAgent } from "@/controllers/selling/agent/assignAgent";
 import {
   addSelling,
   getSellings,
@@ -15,5 +16,7 @@ router.get("/:id", verifyToken, getSelling);
 router.post("/", addSelling);
 router.patch("/:id", verifyToken, updateSelling);
 router.delete("/:id", verifyToken, deleteSelling);
+
+router.post("/agent", verifyToken, assignAgent);
 
 export { router as sellingRouter };
