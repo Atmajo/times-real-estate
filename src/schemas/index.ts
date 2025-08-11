@@ -695,5 +695,5 @@ export const addQuerySchema = z.object({
   email: z.email({ message: "Invalid email" }),
   phone: z.string().min(7, { message: "Invalid mobile number" }),
   message: z.string(),
-  area: z.string()
+  area: z.array(z.string())
 });
