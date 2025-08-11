@@ -8,6 +8,7 @@ import { deleteQuery } from "@/controllers/agent/query/deleteQuery";
 import { deleteAgent } from "@/controllers/agent/deleteAgent";
 import { updateAgent } from "@/controllers/agent/updateAgent";
 import { resendVerification } from "@/controllers/agent/resendVerification";
+import { getAgentByArea } from "@/controllers/agent/area/getAgentByArea";
 
 const router = Router();
 
@@ -24,5 +25,7 @@ router.get("/query", verifyToken, getQueries);
 router.get("/query/:id", verifyToken, getQueryById);
 router.post("/query", addQuery);
 router.delete("/query/:id", deleteQuery);
+
+router.get("/areas", verifyToken, getAgentByArea);
 
 export { router as agentRouter };

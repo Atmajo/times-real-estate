@@ -131,7 +131,7 @@ model Developer {
 model Area {
   id        String   @id @default(cuid())
   image     String[]
-  name      String
+  name      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
