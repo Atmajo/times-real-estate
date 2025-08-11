@@ -55,6 +55,12 @@ enum Timeframe {
   ANYTIME
 }
 
+enum SellingStatus {
+  PENDING
+  FORWARDED
+  RESOLVED
+}
+
 model Collection {
   id         String   @id @default(cuid())
   userId     String
@@ -252,6 +258,7 @@ model Selling {
   message   String
   area      String
   agentId   String?
+  status    SellingStatus @default(PENDING)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

@@ -71,7 +71,7 @@ export const updateSelling = async (req: Request, res: Response) => {
       where: { id },
       data: body,
     });
-
+    
     return res.status(200).json({
       message: "Selling updated successfully",
       selling,

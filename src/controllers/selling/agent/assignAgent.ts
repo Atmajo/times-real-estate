@@ -24,7 +24,10 @@ export const assignAgent = async (req: Request, res: Response) => {
 
     const selling = await prisma.selling.update({
       where: { id: sellingId },
-      data: { agentId },
+      data: { agentId, status: "FORWARDED" },
+      include: {
+        agent: true,
+      },
     });
 
     res.status(200).json({ message: "Agent assigned successfully", selling });
