@@ -3,6 +3,7 @@ import { validator } from "@/lib/validator";
 import logger from "@/logger/logger";
 import { Request, Response } from "express";
 import { paginate } from "@/lib/paginate";
+import { Selling } from "@/generated/prisma";
 
 export const addSelling = async (req: Request, res: Response) => {
   try {
@@ -60,23 +61,46 @@ export const getSelling = async (req: Request, res: Response) => {
 export const updateSelling = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const body = req.body;
+    const body = req.body as Omit<
+      Selling,
+      "id" | "createdAt" | "updatedAt" | "area"
+    >;
 
     const existingSelling = await prisma.selling.findUnique({ where: { id } });
     if (!existingSelling) {
       return res.status(404).json({ error: "Selling not found" });
     }
 
+    const updateData: Record<string, unknown> = {};
+    for (const key in body) {
+      if (
+        Object.prototype.hasOwnProperty.call(body, key) &&
+        key in existingSelling
+      ) {
+        const typedKey = key as keyof typeof body;
+        if (body[typedKey] !== existingSelling[typedKey]) {
+          updateData[typedKey] = body[typedKey];
+        }
+
+        if (body.status === "PENDING") {
+          updateData.agent = {
+            disconnect: { id: existingSelling.agentId },
+          };
+        }
+      }
+    }
+
     const selling = await prisma.selling.update({
       where: { id },
-      data: body,
+      data: { ...updateData },
     });
-    
+
     return res.status(200).json({
       message: "Selling updated successfully",
       selling,
     });
   } catch (error) {
+    console.log(error);
     logger.error("Error in updateSelling controller:", error);
     res.status(500).json({ error: "Failed to update selling" });
   }
