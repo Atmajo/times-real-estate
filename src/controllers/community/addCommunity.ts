@@ -19,19 +19,19 @@ export const addCommunity = async (req: Request, res: Response) => {
     }
 
     const { name, description, areaId } = validatedData;
-
+    
     const areaPromises = areaId.map(async (element: any) => {
       const foundArea = await prisma.area.findUnique({
         where: { id: element },
       });
       return foundArea;
     });
-
+    
     const areaResults = await Promise.all(areaPromises);
     const area: Area[] = areaResults.filter(
       (foundArea): foundArea is Area => foundArea !== null
     );
-
+    
     const community = await prisma.community.create({
       data: {
         name,
