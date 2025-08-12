@@ -4,7 +4,7 @@ services:
   realestate:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: realestate
     ports:
       - "3000:3000"
