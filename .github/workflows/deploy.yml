@@ -16,11 +16,13 @@ jobs:
           PRIVATE_KEY: ${{ secrets.SSH_SECRET_KEY }}
           HOST: ${{ secrets.HOST }}
           USER: ${{ secrets.USERNAME }}
+          APP_DIRECTORY: ${{ secrets.APP_DIRECTORY }}
         run: |
           echo "$PRIVATE_KEY" > github-ec2.pem
           chmod 600 github-ec2.pem 
 
           ssh -o StrictHostKeyChecking=no -i github-ec2.pem "${USER}"@"${HOST}" \
+            cd $APP_DIRECTORY && \
             "echo 'Stopping Docker containers...' && \
             docker compose down --remove-orphans && \
             echo 'Cleaning up Docker images...' && \
