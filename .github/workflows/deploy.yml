@@ -38,18 +38,20 @@ jobs:
           sed -i "s|__PASSWORD__|${{ secrets.PASSWORD }}|g" .env
           sed -i "s|__FRONTEND_URL__|${{ secrets.FRONTEND_URL }}|g" .env
 
-          # Copy .env file to server and deploy
+          # Copy .env and deploy.sh files to server and deploy
           ssh -o StrictHostKeyChecking=no -i github-ec2.pem "${USER}"@"${HOST}" \
             "sudo chown -R ${USER}:${USER} $APP_DIRECTORY && \
             chmod 755 $APP_DIRECTORY"
 
-          # Upload to temporary location first, then move with proper permissions
+          # Upload files to temporary location first, then move with proper permissions
           scp -o StrictHostKeyChecking=no -i github-ec2.pem .env "${USER}"@"${HOST}":~/temp_env
+          scp -o StrictHostKeyChecking=no -i github-ec2.pem deploy.sh "${USER}"@"${HOST}":~/temp_deploy
 
           ssh -o StrictHostKeyChecking=no -i github-ec2.pem "${USER}"@"${HOST}" \
             "mv ~/temp_env $APP_DIRECTORY/.env && \
+            mv ~/temp_deploy $APP_DIRECTORY/deploy.sh && \
             cd $APP_DIRECTORY && \
-            chmod 777 deploy.sh && \
+            chmod +x deploy.sh && \
             ./deploy.sh"
 
           # Clean up temporary files
