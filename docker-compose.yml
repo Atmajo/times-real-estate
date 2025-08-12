@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  realestate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: realestate
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
