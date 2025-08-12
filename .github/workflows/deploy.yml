@@ -21,28 +21,23 @@ jobs:
           echo "$PRIVATE_KEY" > github-ec2.pem
           chmod 600 github-ec2.pem 
 
-          # Create .env file from template with secrets
-          cp .env.template .env
-          sed -i "s|__NODE_ENV__|${{ secrets.NODE_ENV }}|g" .env
-          sed -i "s|__URL__|${{ secrets.URL }}|g" .env
-          sed -i "s|__DATABASE_URL__|${{ secrets.DATABASE_URL }}|g" .env
-          sed -i "s|__JWT_SECRET__|${{ secrets.JWT_SECRET }}|g" .env
-          sed -i "s|__AWS_REGION__|${{ secrets.AWS_REGION }}|g" .env
-          sed -i "s|__AWS_ACCESS_KEY__|${{ secrets.AWS_ACCESS_KEY }}|g" .env
-          sed -i "s|__AWS_SECRET_KEY__|${{ secrets.AWS_SECRET_KEY }}|g" .env
-          sed -i "s|__AWS_BUCKET_NAME__|${{ secrets.AWS_BUCKET_NAME }}|g" .env
-          sed -i "s|__DEFAULT_NAME__|${{ secrets.DEFAULT_NAME }}|g" .env
-          sed -i "s|__DEFAULT_EMAIL__|${{ secrets.DEFAULT_EMAIL }}|g" .env
-          sed -i "s|__DEFAULT_PASSWORD__|${{ secrets.DEFAULT_PASSWORD }}|g" .env
-          sed -i "s|__EMAIL__|${{ secrets.EMAIL }}|g" .env
-          sed -i "s|__PASSWORD__|${{ secrets.PASSWORD }}|g" .env
-          sed -i "s|__FRONTEND_URL__|${{ secrets.FRONTEND_URL }}|g" .env
-
-          # Copy .env file to server and deploy
-          scp -o StrictHostKeyChecking=no -i github-ec2.pem .env "${USER}"@"${HOST}":"${APP_DIRECTORY}"/
-          
           ssh -o StrictHostKeyChecking=no -i github-ec2.pem "${USER}"@"${HOST}" \
             "cd $APP_DIRECTORY && \
+            cp .env.template .env && \
+            sed -i "s|__NODE_ENV__|${{ secrets.NODE_ENV }}|g" .env && \
+            sed -i "s|__URL__|${{ secrets.URL }}|g" .env && \
+            sed -i "s|__DATABASE_URL__|${{ secrets.DATABASE_URL }}|g" .env && \
+            sed -i "s|__JWT_SECRET__|${{ secrets.JWT_SECRET }}|g" .env && \
+            sed -i "s|__AWS_REGION__|${{ secrets.AWS_REGION }}|g" .env && \
+            sed -i "s|__AWS_ACCESS_KEY__|${{ secrets.AWS_ACCESS_KEY }}|g" .env && \
+            sed -i "s|__AWS_SECRET_KEY__|${{ secrets.AWS_SECRET_KEY }}|g" .env && \
+            sed -i "s|__AWS_BUCKET_NAME__|${{ secrets.AWS_BUCKET_NAME }}|g" .env && \
+            sed -i "s|__DEFAULT_NAME__|${{ secrets.DEFAULT_NAME }}|g" .env && \
+            sed -i "s|__DEFAULT_EMAIL__|${{ secrets.DEFAULT_EMAIL }}|g" .env && \
+            sed -i "s|__DEFAULT_PASSWORD__|${{ secrets.DEFAULT_PASSWORD }}|g" .env && \
+            sed -i "s|__EMAIL__|${{ secrets.EMAIL }}|g" .env && \
+            sed -i "s|__PASSWORD__|${{ secrets.PASSWORD }}|g" .env && \
+            sed -i "s|__FRONTEND_URL__|${{ secrets.FRONTEND_URL }}|g" .env && \
             chmod 777 deploy.sh && \
             ./deploy.sh"
 
