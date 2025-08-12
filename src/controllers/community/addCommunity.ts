@@ -1,4 +1,4 @@
-import { Area } from "@/generated/prisma";
+import { Area, Developer } from "@/generated/prisma";
 import { prisma } from "@/lib/prisma";
 import { validator } from "@/lib/validator";
 import logger from "@/logger/logger";
@@ -31,7 +31,7 @@ export const addCommunity = async (req: Request, res: Response) => {
     const area: Area[] = areaResults.filter(
       (foundArea): foundArea is Area => foundArea !== null
     );
-    
+
     const community = await prisma.community.create({
       data: {
         name,
@@ -42,9 +42,10 @@ export const addCommunity = async (req: Request, res: Response) => {
       },
       include: {
         area: true,
+        developer: true,
       },
     });
-
+    
     return res.status(201).json({
       message: "Community added successfully",
       community,

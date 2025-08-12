@@ -19,6 +19,7 @@ export const addDeveloperSchema = z.object({
   description: z
     .string()
     .min(100, "Description must be at least 100 characters"),
+  communityId: z.array(z.string().min(1, "Community ID is required")),
 });
 
 export const updateDeveloperSchema = z.object({
