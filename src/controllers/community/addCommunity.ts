@@ -18,18 +18,30 @@ export const addCommunity = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Invalid data" });
     }
 
-    const { name, description, areaId } = validatedData;
-    
+    const { name, description, areaId, developerId } = validatedData;
+
     const areaPromises = areaId.map(async (element: any) => {
       const foundArea = await prisma.area.findUnique({
         where: { id: element },
       });
       return foundArea;
     });
-    
+
     const areaResults = await Promise.all(areaPromises);
     const area: Area[] = areaResults.filter(
       (foundArea): foundArea is Area => foundArea !== null
+    );
+
+    const developerPromises = developerId.map(async (element: any) => {
+      const foundDeveloper = await prisma.developer.findUnique({
+        where: { id: element },
+      });
+      return foundDeveloper;
+    });
+
+    const developerResults = await Promise.all(developerPromises);
+    const developer: Developer[] = developerResults.filter(
+      (foundDeveloper): foundDeveloper is Developer => foundDeveloper !== null
     );
 
     const community = await prisma.community.create({
@@ -39,13 +51,16 @@ export const addCommunity = async (req: Request, res: Response) => {
         area: {
           connect: area.map((a) => ({ id: a.id })),
         },
+        developer: {
+          connect: developer.map((d) => ({ id: d.id })),
+        },
       },
       include: {
         area: true,
         developer: true,
       },
     });
-    
+
     return res.status(201).json({
       message: "Community added successfully",
       community,

@@ -18,8 +18,7 @@ export const addDeveloperSchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z
     .string()
-    .min(100, "Description must be at least 100 characters"),
-  communityId: z.array(z.string().min(1, "Community ID is required")),
+    .min(20, "Description must be at least 20 characters"),
 });
 
 export const updateDeveloperSchema = z.object({
@@ -46,11 +45,14 @@ export const addCommunitySchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z.string().min(1, "Description is required"),
   areaId: z.array(z.string().min(1, "Area ID is required")),
+  developerId: z.array(z.string().min(1, "Developer ID is required")),
 });
 
 export const updateCommunitySchema = z.object({
   name: z.string().optional(),
   description: z.string().optional(),
+  areaId: z.array(z.string()).optional(),
+  developerId: z.array(z.string()).optional(),
 });
 
 // PaymentPlan schemas

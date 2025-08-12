@@ -18,26 +18,9 @@ export const addDeveloper = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Invalid data" });
     }
 
-    const { communityId } = validatedData;
-
-    const communityPromises = communityId.map(async (element: any) => {
-      const foundCommunity = await prisma.community.findUnique({
-        where: { id: element },
-      });
-      return foundCommunity;
-    });
-
-    const communityResults = await Promise.all(communityPromises);
-    const community: Community[] = communityResults.filter(
-      (foundCommunity): foundCommunity is Community => foundCommunity !== null
-    );
-
     const developer = await prisma.developer.create({
       data: {
         ...validatedData,
-        community: {
-          connect: community.map((c) => ({ id: c.id })),
-        },
       },
       include: {
         community: true,
