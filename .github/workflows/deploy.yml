@@ -45,11 +45,9 @@ jobs:
 
           # Upload files to temporary location first, then move with proper permissions
           scp -o StrictHostKeyChecking=no -i github-ec2.pem .env "${USER}"@"${HOST}":~/temp_env
-          scp -o StrictHostKeyChecking=no -i github-ec2.pem deploy.sh "${USER}"@"${HOST}":~/temp_deploy
 
           ssh -o StrictHostKeyChecking=no -i github-ec2.pem "${USER}"@"${HOST}" \
             "mv ~/temp_env $APP_DIRECTORY/.env && \
-            mv ~/temp_deploy $APP_DIRECTORY/deploy.sh && \
             cd $APP_DIRECTORY && \
             echo "Pulling latest changes..." && \
             git pull origin dev && \
