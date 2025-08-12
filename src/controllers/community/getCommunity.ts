@@ -10,6 +10,7 @@ export const getCommunity = async (req: Request, res: Response) => {
       where: { id },
       include: {
         area: true,
+        developer: true,
         properties: {
           orderBy: { createdAt: "desc" },
         },
