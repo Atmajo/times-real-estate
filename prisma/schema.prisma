@@ -160,7 +160,7 @@ model Community {
   // Relations
   area       Area[]
   properties Property[]
-  developer  Developer[]
+  developer  Developer[] // To be connected
 
   @@map("community")
 }

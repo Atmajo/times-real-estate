@@ -6,7 +6,7 @@ export const getSellingsByAgentId = async (req: Request, res: Response) => {
   if (!req.user) {
     return res.status(401).json({ message: "Unauthorized" });
   }
-  
+
   try {
     const { id: agentId } = req.user;
     const { page, limit, all } = req.query as unknown as {
@@ -22,7 +22,7 @@ export const getSellingsByAgentId = async (req: Request, res: Response) => {
     const sellings = await prisma.selling.findMany({
       where: { agentId },
     });
-
+    
     if (all === "true") {
       return res.status(200).json({ data: sellings });
     }
@@ -32,7 +32,7 @@ export const getSellingsByAgentId = async (req: Request, res: Response) => {
       Number(page) || 1,
       Number(limit) || 10
     );
-    
+
     res.status(200).json({ ...paginatedData });
   } catch (error) {
     console.log(error);
