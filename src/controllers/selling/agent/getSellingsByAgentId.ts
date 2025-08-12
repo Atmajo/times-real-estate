@@ -3,8 +3,12 @@ import { prisma } from "@/lib/prisma";
 import { Request, Response } from "express";
 
 export const getSellingsByAgentId = async (req: Request, res: Response) => {
+  if (!req.user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  
   try {
-    const { agentId } = req.params;
+    const { id: agentId } = req.user;
     const { page, limit, all } = req.query as unknown as {
       page: number | null;
       limit: number | null;

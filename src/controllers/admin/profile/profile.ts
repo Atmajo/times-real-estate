@@ -3,17 +3,11 @@ import logger from "@/logger/logger";
 import { Request, Response } from "express";
 
 export const profile = async (req: Request, res: Response) => {
-  if (!req.user) {
-    return res.status(401).json({ error: "Unauthorized profile" });
-  }
-
   try {
-    const { id } = req.user;
-
-    console.log("Fetching profile for user ID:", req.user);
+    const { adminId } = req.params;
 
     const profile = await prisma.user.findUnique({
-      where: { id },
+      where: { id: adminId },
       select: {
         id: true,
         name: true,
@@ -21,6 +15,8 @@ export const profile = async (req: Request, res: Response) => {
         role: true,
         createdAt: true,
         updatedAt: true,
+        area: true,
+        Selling: true,
         property: true,
       },
     });
