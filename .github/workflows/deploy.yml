@@ -51,6 +51,8 @@ jobs:
             "mv ~/temp_env $APP_DIRECTORY/.env && \
             mv ~/temp_deploy $APP_DIRECTORY/deploy.sh && \
             cd $APP_DIRECTORY && \
+            echo "Pulling latest changes..." && \
+            git pull origin dev && \
             chmod +x deploy.sh && \
             ./deploy.sh"
 
