@@ -32,9 +32,12 @@ export const addPaymentPlan = async (req: Request, res: Response) => {
 export const getPaymentPlans = async (req: Request, res: Response) => {
   try {
     const paymentPlans = await prisma.paymentPlan.findMany({
-      include: { properties: true },
       orderBy: { createdAt: "desc" },
     });
+    
+    if (req.query.all === "true") {
+      return res.status(200).json({ data: paymentPlans });
+    }
 
     const { page, limit, totalPages, totalItems, items } = paginate(
       paymentPlans,
@@ -54,7 +57,7 @@ export const getPaymentPlan = async (req: Request, res: Response) => {
     const { id } = req.params;
     const paymentPlan = await prisma.paymentPlan.findUnique({
       where: { id },
-      include: { 
+      include: {
         properties: {
           orderBy: { createdAt: "desc" },
         },
@@ -77,7 +80,9 @@ export const updatePaymentPlan = async (req: Request, res: Response) => {
     const { id } = req.params;
     const body = req.body;
 
-    const existingPaymentPlan = await prisma.paymentPlan.findUnique({ where: { id } });
+    const existingPaymentPlan = await prisma.paymentPlan.findUnique({
+      where: { id },
+    });
     if (!existingPaymentPlan) {
       return res.status(404).json({ error: "Payment plan not found" });
     }
@@ -86,7 +91,7 @@ export const updatePaymentPlan = async (req: Request, res: Response) => {
     if (!validatedData) {
       return res.status(400).json({ error: "Invalid data" });
     }
-    
+
     const paymentPlan = await prisma.paymentPlan.update({
       where: { id },
       data: validatedData,
@@ -105,7 +110,9 @@ export const updatePaymentPlan = async (req: Request, res: Response) => {
 export const deletePaymentPlan = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const existingPaymentPlan = await prisma.paymentPlan.findUnique({ where: { id } });
+    const existingPaymentPlan = await prisma.paymentPlan.findUnique({
+      where: { id },
+    });
 
     if (!existingPaymentPlan) {
       return res.status(404).json({ error: "Payment plan not found" });
