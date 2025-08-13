@@ -1,0 +1,19 @@
+{
+  "areaId": "cme9gxpn00000ul5rnd5l7ojr",
+  "developerId": "cme9gy9nu0001ul5r302p9m6p",
+  "communityId": "cme9gyhhb0002ul5rl3fnq3lc",
+  "paymentPlanId": "cme9gyupo0003ul5ravqwfiul",
+  "images": ["https://example.com/images/property1.jpg"],
+  "name": "Modern Apartment",
+  "overview": "A beautiful 2-bedroom apartment with modern amenities.",
+  "status": "Ready_To_Move",
+  "price": 750000,
+  "type": "Apartments",
+  "isFeatured": false,
+  "brochure": "https://example.com/brochures/property-brochure.pdf",
+  "floorPlanBrochure": "https://example.com/brochures/floor-plan.pdf",
+  "paymentPlanBrochure": "https://example.com/brochures/payment-plan.pdf",
+  "lat": "25.2048",
+  "long": "55.2708",
+  "handover": "2024-06-30T00:00:00.000Z"
+}

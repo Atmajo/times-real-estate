@@ -5,11 +5,20 @@ import { updatePropertySchema } from "@/schemas";
 import { Request, Response } from "express";
 
 export const updateProperty = async (req: Request, res: Response) => {
+  if (!req.user) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
   try {
     const { id } = req.params;
     const body = req.body;
 
-    const existingProperty = await prisma.property.findUnique({ where: { id } });
+    const existingProperty = await prisma.property.findUnique({ 
+      where: { 
+        id,
+        ...(req.user.role === "AGENT" && { userId: req.user.id }),
+      } 
+    });
     if (!existingProperty) {
       return res.status(404).json({ error: "Property not found" });
     }
@@ -70,9 +79,18 @@ export const updateProperty = async (req: Request, res: Response) => {
 };
 
 export const deleteProperty = async (req: Request, res: Response) => {
+  if (!req.user) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
   try {
     const { id } = req.params;
-    const existingProperty = await prisma.property.findUnique({ where: { id } });
+    const existingProperty = await prisma.property.findUnique({ 
+      where: { 
+        id,
+        ...(req.user.role === "AGENT" && { userId: req.user.id }),
+      } 
+    });
 
     if (!existingProperty) {
       return res.status(404).json({ error: "Property not found" });

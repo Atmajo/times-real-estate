@@ -39,7 +39,7 @@ export const addProperty = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Payment plan not found" });
     if (!area) return res.status(404).json({ error: "Area not found" });
     const property = await prisma.property.create({
-      data: { ...validatedData, adminId: req.user.id },
+      data: { ...validatedData, userId: req.user.id },
       include: {
         developer: true,
         community: true,
@@ -53,6 +53,7 @@ export const addProperty = async (req: Request, res: Response) => {
       property,
     });
   } catch (error) {
+    console.log(error)
     logger.error("Error in addProperty controller:", error);
     res.status(500).json({ error: "Failed to add property" });
   }

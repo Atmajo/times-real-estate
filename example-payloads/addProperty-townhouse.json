@@ -1,0 +1,39 @@
+{
+  "areaId": "cme9gxpn00000ul5rnd5l7ojr",
+  "developerId": "cme9gy9nu0001ul5r302p9m6p",
+  "communityId": "cme9gyhhb0002ul5rl3fnq3lc",
+  "paymentPlanId": "cme9gyupo0003ul5ravqwfiul",
+  "images": [
+    "https://example.com/images/townhouse1.jpg",
+    "https://example.com/images/townhouse2.jpg"
+  ],
+  "name": "Executive Townhouse",
+  "overview": "A spacious 3-bedroom townhouse perfect for families, featuring a private garden and modern kitchen.",
+  "status": "Offplan",
+  "price": 950000,
+  "type": "Townhouses",
+  "isFeatured": true,
+  "brochure": "https://example.com/brochures/townhouse-brochure.pdf",
+  "floorPlanBrochure": "https://example.com/brochures/townhouse-floor-plan.pdf",
+  "paymentPlanBrochure": "https://example.com/brochures/townhouse-payment-plan.pdf",
+  "lat": "25.1975",
+  "long": "55.2744",
+  "availableDates": ["2024-03-01T00:00:00.000Z", "2024-04-01T00:00:00.000Z"],
+  "handover": "2025-01-31T00:00:00.000Z",
+
+  "beds": "3",
+  "baths": "2",
+  "sqft_min": "1800",
+  "sqft_max": "2000",
+
+  "property_type": ["Residential"],
+  "property_status": ["Active"],
+  "popular_features": ["New Construction"],
+  "community_features": ["Gated", "Tennis Courts"],
+  "interior_features": ["Hardwood", "Security System"],
+  "parking_features": ["Attached Garage"],
+  "view": ["City"],
+  "heating": ["Natural Gas"],
+  "home_style": ["Contemporary"],
+  "stories": ["2 Story"]
+}

@@ -78,8 +78,23 @@ export const updateFeatureAmenitiesSchema = z.object({
 });
 
 export const propertyFiltersSchema = z.object({
+  // Single selection fields
   beds: z.enum(["ANY", "1", "2", "3", "4+"]).optional(),
   baths: z.enum(["ANY", "1", "2", "3", "4+"]).optional(),
+  
+  // Range fields
+  price_range_min: z.string().optional(),
+  price_range_max: z.string().optional(),
+  sqft_min: z.string().optional(),
+  sqft_max: z.string().optional(),
+  lot_size_min: z.string().optional(),
+  lot_size_max: z.string().optional(),
+  year_built_min: z.string().optional(),
+  year_built_max: z.string().optional(),
+  garage_min: z.string().optional(),
+  garage_max: z.string().optional(),
+  
+  // Multi-select fields
   property_type: z
     .array(
       z.enum([
@@ -316,8 +331,20 @@ export const getPropertiesQuerySchema = z.object({
   maxPrice: z.string().optional(),
   minSize: z.string().optional(),
   maxSize: z.string().optional(),
+  
+  // Property filter fields
   beds: z.enum(["ANY", "1", "2", "3", "4+"]).optional(),
   baths: z.enum(["ANY", "1", "2", "3", "4+"]).optional(),
+  price_range_min: z.string().optional(),
+  price_range_max: z.string().optional(),
+  sqft_min: z.string().optional(),
+  sqft_max: z.string().optional(),
+  lot_size_min: z.string().optional(),
+  lot_size_max: z.string().optional(),
+  year_built_min: z.string().optional(),
+  year_built_max: z.string().optional(),
+  garage_min: z.string().optional(),
+  garage_max: z.string().optional(),
   property_type: z
     .array(
       z.enum([
@@ -525,15 +552,15 @@ export const getPropertiesQuerySchema = z.object({
 });
 
 export const addPropertySchema = z.object({
+  areaId: z.string().min(1, "Area ID is required"),
   developerId: z.string().min(1, "Developer ID is required"),
   communityId: z.string().min(1, "Community ID is required"),
-  areaId: z.string().min(1, "Area ID is required"),
+  paymentPlanId: z.string().min(1, "Payment plan ID is required"),
   images: z.array(z.string().url()).min(1, "At least one image is required"),
   name: z.string().min(1, "Name is required"),
   overview: z.string().min(1, "Overview is required"),
-  accommodation: z.string().min(1, "Accommodation is required"),
-  possession: z.string().min(1, "Possession is required"),
   status: z.enum(["Coming_Soon", "Offplan", "Ready_To_Move", "Resale"]),
+  price: z.number().positive("Price must be positive"),
   type: z.enum([
     "Apartments",
     "Villas",
@@ -547,20 +574,233 @@ export const addPropertySchema = z.object({
     "Lofts",
   ]),
   isFeatured: z.boolean(),
-  size: z.number().positive("Size must be positive"),
-  downPayment: z.number().positive("Down payment must be positive"),
-  paymentPlanId: z.string().min(1, "Payment plan ID is required"),
-  handover: z.date("Invalid handover date"),
-  featureAmenities: propertyFiltersSchema,
   brochure: z.string().url("Brochure must be a valid URL"),
   floorPlanBrochure: z.string().url("Floor plan brochure must be a valid URL"),
   paymentPlanBrochure: z
-    .string()
-    .url("Payment plan brochure must be a valid URL"),
-  price: z.number().positive("Price must be positive"),
+  .string()
+  .url("Payment plan brochure must be a valid URL"),
   lat: z.string().min(1, "Latitude is required"),
   long: z.string().min(1, "Longitude is required"),
-  availableDates: z.array(z.date()).optional(),
+  availableDates: z.array(z.coerce.date()).optional(),
+  handover: z.coerce.date({ message: "Invalid handover date" }),
+  
+  // Property filter fields (optional for add)
+  beds: z.enum(["ANY", "1", "2", "3", "4+"]).optional(),
+  baths: z.enum(["ANY", "1", "2", "3", "4+"]).optional(),
+  price_range_min: z.string().optional(),
+  price_range_max: z.string().optional(),
+  sqft_min: z.string().optional(),
+  sqft_max: z.string().optional(),
+  lot_size_min: z.string().optional(),
+  lot_size_max: z.string().optional(),
+  year_built_min: z.string().optional(),
+  year_built_max: z.string().optional(),
+  garage_min: z.string().optional(),
+  garage_max: z.string().optional(),
+  property_type: z
+    .array(
+      z.enum([
+        "Business Opportunity",
+        "Commercial Sale",
+        "Condo/Townhome",
+        "Farm/Ranch",
+        "Manufactured Home",
+        "Multi-Family",
+        "Residential",
+        "Residential Lease",
+        "Vacant Land",
+      ])
+    )
+    .optional(),
+  property_status: z
+    .array(
+      z.enum([
+        "All",
+        "Active",
+        "Pending",
+        "Active with contingency",
+        "Open Houses",
+        "New Listings",
+        "Price Reduced",
+      ])
+    )
+    .optional(),
+  popular_features: z
+    .array(z.enum(["Basement", "Waterfront", "New Construction"]))
+    .optional(),
+  community_features: z
+    .array(
+      z.enum([
+        "Golf Community",
+        "Boat Launch",
+        "Tennis Courts",
+        "Community Waterfront/Pvt",
+        "Airfield",
+        "Gated",
+        "Golf",
+        "Senior Community",
+        "No CCRs",
+        "Has CCRs",
+        "No Age Restrictions",
+      ])
+    )
+    .optional(),
+  interior_features: z
+    .array(
+      z.enum([
+        "Basement: Daylight",
+        "Built-In Vacuum",
+        "Loft",
+        "Security System",
+        "Wired for Generator",
+        "2nd Master Bedroom",
+        "Hardwood",
+        "Basement: Finished",
+        "Second Kitchen",
+        "Basement: Partially Finished",
+        "Basement: Unfinished",
+        "Master on Main",
+        "Furnished",
+        "Second Primary Bedroom",
+        "Elevator",
+      ])
+    )
+    .optional(),
+  parking_features: z
+    .array(
+      z.enum(["Off Street", "RV Parking", "Attached Garage", "Common Garage"])
+    )
+    .optional(),
+  view: z
+    .array(
+      z.enum([
+        "Bay",
+        "City",
+        "Golf Course",
+        "Jetty",
+        "Lake",
+        "Ocean",
+        "River",
+        "Sound",
+        "Strait",
+        "Canal",
+        "Mountain(s)",
+      ])
+    )
+    .optional(),
+  heating: z
+    .array(
+      z.enum([
+        "90%+ High Efficiency",
+        "Baseboard",
+        "Ductless HP-Mini Split",
+        "Electric",
+        "Forced Air",
+        "Heat Pump",
+        "HEPA Air Filtration",
+        "High Efficiency (Unspecified)",
+        "HRV/ERV System",
+        "Insert",
+        "Natural Gas",
+        "Oil",
+        "Pellet",
+        "Propane",
+        "Radiant",
+        "Solar (Unspecified)",
+        "Solar PV",
+        "Tankless Water Heater",
+        "Wood",
+        "Hot Water Recirculation Pump",
+      ])
+    )
+    .optional(),
+  financial_information: z
+    .array(
+      z.enum([
+        "Cash Out",
+        "Farm Home Loan",
+        "FHA",
+        "Owner Financing",
+        "Rehab Loan",
+        "State Bond",
+        "VA Loan",
+        "USDA Loan",
+        "Has HOA",
+        "No HOA",
+        "Conventional",
+        "Assumable",
+        "Short Sale",
+        "Bank Or REO",
+      ])
+    )
+    .optional(),
+  home_style: z
+    .array(
+      z.enum([
+        "Townhouse",
+        "Contemporary",
+        "Craftsman",
+        "NW Contemporary",
+        "Duplex",
+        "Triplex",
+        "Quadruplex",
+        "Dock",
+        "Floating House",
+        "Cabin",
+      ])
+    )
+    .optional(),
+  heating_features: z
+    .array(z.enum(["Stove/Free Standing", "Central A/C"]))
+    .optional(),
+  property_subtypes: z.array(z.enum(["ADU", "Condominium"])).optional(),
+  lot_features: z
+    .array(
+      z.enum([
+        "Bank-Medium",
+        "No Bank",
+        "Bank-High",
+        "Bulkhead",
+        "Lake",
+        "Creek",
+        "Saltwater",
+        "Sound",
+        "Strait",
+        "Tideland Rights",
+        "Fenced-Fully",
+        "RV Parking",
+        "Sprinkler System",
+        "Shop",
+        "Bay/Harbor",
+        "Green House",
+        "Electric Car Charging",
+        "Zoning: HDC-1",
+        "River Access",
+      ])
+    )
+    .optional(),
+  pool_features: z
+    .array(z.enum(["Community", "Above Ground", "In-Ground", "Indoor"]))
+    .optional(),
+  green_features: z
+    .array(z.enum(["High Efficiency - 90%+", "Insulated Windows"]))
+    .optional(),
+  stories: z.array(z.enum(["1 Story", "2 Story", "3+ Story"])).optional(),
+  exterior_features: z
+    .array(
+      z.enum([
+        "Under Construction",
+        "Average",
+        "Very Good",
+        "Good",
+        "Fair",
+        "Fixer",
+        "Has ADU",
+        "Remodeled",
+      ])
+    )
+    .optional(),
+  property_features: z.array(z.enum(["Equestrian", "Pasture Land"])).optional(),
 });
 
 export const updatePropertySchema = z.object({
@@ -590,18 +830,233 @@ export const updatePropertySchema = z.object({
     ])
     .optional(),
   isFeatured: z.boolean().optional(),
-  size: z.number().positive().optional(),
-  downPayment: z.number().positive().optional(),
   paymentPlanId: z.string().optional(),
-  handover: z.date().optional(),
-  featureAmenities: propertyFiltersSchema.optional(),
+  handover: z.coerce.date().optional(),
   brochure: z.string().url().optional(),
   floorPlanBrochure: z.string().url().optional(),
   paymentPlanBrochure: z.string().url().optional(),
   price: z.number().positive().optional(),
   lat: z.string().optional(),
   long: z.string().optional(),
-  availableDates: z.array(z.date()).optional(),
+  availableDates: z.array(z.coerce.date()).optional(),
+  
+  // Property filter fields (all optional for update)
+  beds: z.enum(["ANY", "1", "2", "3", "4+"]).optional(),
+  baths: z.enum(["ANY", "1", "2", "3", "4+"]).optional(),
+  price_range_min: z.string().optional(),
+  price_range_max: z.string().optional(),
+  sqft_min: z.string().optional(),
+  sqft_max: z.string().optional(),
+  lot_size_min: z.string().optional(),
+  lot_size_max: z.string().optional(),
+  year_built_min: z.string().optional(),
+  year_built_max: z.string().optional(),
+  garage_min: z.string().optional(),
+  garage_max: z.string().optional(),
+  property_type: z
+    .array(
+      z.enum([
+        "Business Opportunity",
+        "Commercial Sale",
+        "Condo/Townhome",
+        "Farm/Ranch",
+        "Manufactured Home",
+        "Multi-Family",
+        "Residential",
+        "Residential Lease",
+        "Vacant Land",
+      ])
+    )
+    .optional(),
+  property_status: z
+    .array(
+      z.enum([
+        "All",
+        "Active",
+        "Pending",
+        "Active with contingency",
+        "Open Houses",
+        "New Listings",
+        "Price Reduced",
+      ])
+    )
+    .optional(),
+  popular_features: z
+    .array(z.enum(["Basement", "Waterfront", "New Construction"]))
+    .optional(),
+  community_features: z
+    .array(
+      z.enum([
+        "Golf Community",
+        "Boat Launch",
+        "Tennis Courts",
+        "Community Waterfront/Pvt",
+        "Airfield",
+        "Gated",
+        "Golf",
+        "Senior Community",
+        "No CCRs",
+        "Has CCRs",
+        "No Age Restrictions",
+      ])
+    )
+    .optional(),
+  interior_features: z
+    .array(
+      z.enum([
+        "Basement: Daylight",
+        "Built-In Vacuum",
+        "Loft",
+        "Security System",
+        "Wired for Generator",
+        "2nd Master Bedroom",
+        "Hardwood",
+        "Basement: Finished",
+        "Second Kitchen",
+        "Basement: Partially Finished",
+        "Basement: Unfinished",
+        "Master on Main",
+        "Furnished",
+        "Second Primary Bedroom",
+        "Elevator",
+      ])
+    )
+    .optional(),
+  parking_features: z
+    .array(
+      z.enum(["Off Street", "RV Parking", "Attached Garage", "Common Garage"])
+    )
+    .optional(),
+  view: z
+    .array(
+      z.enum([
+        "Bay",
+        "City",
+        "Golf Course",
+        "Jetty",
+        "Lake",
+        "Ocean",
+        "River",
+        "Sound",
+        "Strait",
+        "Canal",
+        "Mountain(s)",
+      ])
+    )
+    .optional(),
+  heating: z
+    .array(
+      z.enum([
+        "90%+ High Efficiency",
+        "Baseboard",
+        "Ductless HP-Mini Split",
+        "Electric",
+        "Forced Air",
+        "Heat Pump",
+        "HEPA Air Filtration",
+        "High Efficiency (Unspecified)",
+        "HRV/ERV System",
+        "Insert",
+        "Natural Gas",
+        "Oil",
+        "Pellet",
+        "Propane",
+        "Radiant",
+        "Solar (Unspecified)",
+        "Solar PV",
+        "Tankless Water Heater",
+        "Wood",
+        "Hot Water Recirculation Pump",
+      ])
+    )
+    .optional(),
+  financial_information: z
+    .array(
+      z.enum([
+        "Cash Out",
+        "Farm Home Loan",
+        "FHA",
+        "Owner Financing",
+        "Rehab Loan",
+        "State Bond",
+        "VA Loan",
+        "USDA Loan",
+        "Has HOA",
+        "No HOA",
+        "Conventional",
+        "Assumable",
+        "Short Sale",
+        "Bank Or REO",
+      ])
+    )
+    .optional(),
+  home_style: z
+    .array(
+      z.enum([
+        "Townhouse",
+        "Contemporary",
+        "Craftsman",
+        "NW Contemporary",
+        "Duplex",
+        "Triplex",
+        "Quadruplex",
+        "Dock",
+        "Floating House",
+        "Cabin",
+      ])
+    )
+    .optional(),
+  heating_features: z
+    .array(z.enum(["Stove/Free Standing", "Central A/C"]))
+    .optional(),
+  property_subtypes: z.array(z.enum(["ADU", "Condominium"])).optional(),
+  lot_features: z
+    .array(
+      z.enum([
+        "Bank-Medium",
+        "No Bank",
+        "Bank-High",
+        "Bulkhead",
+        "Lake",
+        "Creek",
+        "Saltwater",
+        "Sound",
+        "Strait",
+        "Tideland Rights",
+        "Fenced-Fully",
+        "RV Parking",
+        "Sprinkler System",
+        "Shop",
+        "Bay/Harbor",
+        "Green House",
+        "Electric Car Charging",
+        "Zoning: HDC-1",
+        "River Access",
+      ])
+    )
+    .optional(),
+  pool_features: z
+    .array(z.enum(["Community", "Above Ground", "In-Ground", "Indoor"]))
+    .optional(),
+  green_features: z
+    .array(z.enum(["High Efficiency - 90%+", "Insulated Windows"]))
+    .optional(),
+  stories: z.array(z.enum(["1 Story", "2 Story", "3+ Story"])).optional(),
+  exterior_features: z
+    .array(
+      z.enum([
+        "Under Construction",
+        "Average",
+        "Very Good",
+        "Good",
+        "Fair",
+        "Fixer",
+        "Has ADU",
+        "Remodeled",
+      ])
+    )
+    .optional(),
+  property_features: z.array(z.enum(["Equestrian", "Pasture Land"])).optional(),
 });
 
 // PropertyContact schemas

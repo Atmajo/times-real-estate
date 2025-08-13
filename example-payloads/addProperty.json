@@ -1,0 +1,67 @@
+{
+  "areaId": "cme9gxpn00000ul5rnd5l7ojr",
+  "developerId": "cme9gy9nu0001ul5r302p9m6p",
+  "communityId": "cme9gyhhb0002ul5rl3fnq3lc",
+  "paymentPlanId": "cme9gyupo0003ul5ravqwfiul",
+  "images": [
+    "https://example.com/images/property1.jpg",
+    "https://example.com/images/property2.jpg",
+    "https://example.com/images/property3.jpg"
+  ],
+  "name": "Luxury Villa in Downtown",
+  "overview": "A stunning 4-bedroom villa located in the heart of downtown with modern amenities and breathtaking city views. This property features high-end finishes, spacious rooms, and a private garden.",
+  "status": "Ready_To_Move",
+  "price": 1250000,
+  "type": "Villas",
+  "isFeatured": true,
+  "brochure": "https://example.com/brochures/property-brochure.pdf",
+  "floorPlanBrochure": "https://example.com/brochures/floor-plan.pdf",
+  "paymentPlanBrochure": "https://example.com/brochures/payment-plan.pdf",
+  "lat": "25.2048",
+  "long": "55.2708",
+  "availableDates": [
+    "2024-01-15T00:00:00.000Z",
+    "2024-02-01T00:00:00.000Z",
+    "2024-03-01T00:00:00.000Z"
+  ],
+  "handover": "2024-12-31T00:00:00.000Z",
+  
+  "beds": "4+",
+  "baths": "3",
+
+  "price_range_min": "1000000",
+  "price_range_max": "1500000",
+  "sqft_min": "2500",
+  "sqft_max": "3000",
+  "lot_size_min": "5000",
+  "lot_size_max": "7000",
+  "year_built_min": "2020",
+  "year_built_max": "2024",
+  "garage_min": "2",
+  "garage_max": "3",
+
+  "property_type": ["Residential", "Multi-Family"],
+  "property_status": ["Active", "New Listings"],
+  "popular_features": ["Waterfront", "New Construction"],
+  "community_features": ["Gated", "Golf Community", "Tennis Courts"],
+  "interior_features": [
+    "Hardwood",
+    "Master on Main",
+    "Security System",
+    "Built-In Vacuum",
+    "Furnished"
+  ],
+  "parking_features": ["Attached Garage", "RV Parking"],
+  "view": ["Ocean", "City", "Mountain(s)"],
+  "heating": ["Natural Gas", "Heat Pump", "High Efficiency (Unspecified)"],
+  "financial_information": ["Conventional", "FHA", "No HOA"],
+  "home_style": ["Contemporary", "Craftsman"],
+  "heating_features": ["Central A/C"],
+  "property_subtypes": ["Condominium"],
+  "lot_features": ["Fenced-Fully", "Sprinkler System", "Green House"],
+  "pool_features": ["In-Ground", "Community"],
+  "green_features": ["High Efficiency - 90%+", "Insulated Windows"],
+  "stories": ["2 Story"],
+  "exterior_features": ["Very Good", "Remodeled"],
+  "property_features": ["Equestrian"]
+}
