@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { validator } from "@/lib/validator";
+import { updatePropertyInRedis, removePropertyFromRedis } from "@/lib/propertySearchSync";
 import logger from "@/logger/logger";
 import { updatePropertySchema } from "@/schemas";
 import { Request, Response } from "express";
@@ -68,6 +69,10 @@ export const updateProperty = async (req: Request, res: Response) => {
       },
     });
 
+    updatePropertyInRedis(property.id).catch(error => {
+      logger.error(`Failed to update property ${property.id} in Redis:`, error);
+    });
+
     return res.status(200).json({
       message: "Property updated successfully",
       property,
@@ -97,6 +102,11 @@ export const deleteProperty = async (req: Request, res: Response) => {
     }
 
     await prisma.property.delete({ where: { id } });
+
+    // Remove from Redis search index (async, don't wait for it)
+    removePropertyFromRedis(id).catch(error => {
+      logger.error(`Failed to remove property ${id} from Redis:`, error);
+    });
 
     return res.status(200).json({
       message: "Property deleted successfully",

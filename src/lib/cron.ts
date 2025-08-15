@@ -1,5 +1,7 @@
 import { schedule } from "node-cron";
 import { config } from "@/config/config";
+import { syncAllPropertiesToRedis } from "@/lib/propertySearchSync";
+import { clearSearchCache } from "@/lib/redis";
 import logger from "@/logger/logger";
 
 const ping = async () => {
@@ -22,11 +24,47 @@ const ping = async () => {
   }
 };
 
+const syncPropertiesToRedis = async () => {
+  try {
+    logger.info("Starting scheduled Redis property sync...");
+    await syncAllPropertiesToRedis();
+    logger.info("Scheduled Redis property sync completed successfully");
+  } catch (error) {
+    logger.error("Scheduled Redis property sync failed:", {
+      error: error instanceof Error ? error.message : String(error),
+      timestamp: new Date().toISOString(),
+    });
+  }
+};
+
+const clearRedisCache = async () => {
+  try {
+    logger.info("Starting scheduled Redis cache clear...");
+    await clearSearchCache();
+    logger.info("Scheduled Redis cache clear completed successfully");
+  } catch (error) {
+    logger.error("Scheduled Redis cache clear failed:", {
+      error: error instanceof Error ? error.message : String(error),
+      timestamp: new Date().toISOString(),
+    });
+  }
+};
+
 const jobs = [
   {
     name: "Daily Maintenance",
     schedule: config.cronjob,
     task: async () => ping(),
+  },
+  {
+    name: "Redis Property Sync",
+    schedule: "0 */6 * * *", // Every 6 hours
+    task: syncPropertiesToRedis,
+  },
+  {
+    name: "Redis Cache Clear",
+    schedule: "0 2 * * *", // Daily at 2 AM
+    task: clearRedisCache,
   },
 ];
 

@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { validator } from "@/lib/validator";
+import { syncPropertyToRedis } from "@/lib/propertySearchSync";
 import logger from "@/logger/logger";
 import { addPropertySchema } from "@/schemas";
 import { Request, Response } from "express";
@@ -17,7 +18,6 @@ export const addProperty = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Invalid data" });
     }
 
-    // Validate foreign key references
     const [developer, community, paymentPlan, area] = await Promise.all([
       prisma.developer.findUnique({
         where: { id: validatedData.developerId },
@@ -46,6 +46,10 @@ export const addProperty = async (req: Request, res: Response) => {
         paymentPlan: true,
         area: true,
       },
+    });
+    
+    syncPropertyToRedis(property.id).catch(error => {
+      logger.error(`Failed to sync new property ${property.id} to Redis:`, error);
     });
     
     return res.status(201).json({
