@@ -5,7 +5,7 @@ export const registerSchema = z.object({
   email: z.string().email("Invalid email format"),
   password: z.string().optional(),
   role: z.enum(["ADMIN", "AGENT", "MANAGER"]).optional(),
-  area: z.array(z.string().optional()),
+  area: z.array(z.string()).optional(),
 });
 
 export const loginSchema = z.object({
