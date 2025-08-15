@@ -8,7 +8,7 @@ services:
       - "3000:3000"
     restart: unless-stopped
     networks:
-      - edunetwork
+      - realestate
   
   redis:
     image: redis:alpine
@@ -17,21 +17,10 @@ services:
     volumes:
       - redis-data:/data
     networks:
-      - edunetwork
-    
-  nginx-server:
-      image: nginx:alpine
-      container_name: nginx-server
-      ports:
-      - "80:80"
-      volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      restart: unless-stopped
-      networks:
-        - edunetwork
+      - realestate
 
 networks:
-  edunetwork:
+  realestate:
     driver: bridge
 
 volumes:
