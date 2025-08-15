@@ -45,8 +45,22 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
+app.get("/", (req: Request, res: Response) => {
+  res.send("Express + TypeScript Server is running");
+});
+
 app.use("/api", indexRouter);
 app.use("/auth", authRouter);
+
+// Health check endpoint
+app.get("/health", (req: Request, res: Response) => {
+  res.status(200).json({
+    status: "OK",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: config.nodeenv
+  });
+});
 
 app.listen(port, async () => {
   config.nodeenv !== "dev" && initializeCronJobs();

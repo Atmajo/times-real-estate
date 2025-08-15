@@ -38,7 +38,7 @@ jobs:
           sed -i "s|__PASSWORD__|${{ secrets.PASSWORD }}|g" .env
           sed -i "s|__FRONTEND_URL__|${{ secrets.FRONTEND_URL }}|g" .env
 
-          # Copy .env and deploy.sh files to server and deploy
+          # Copy .env files to server and deploy
           ssh -o StrictHostKeyChecking=no -i github-ec2.pem "${USER}"@"${HOST}" \
             "sudo chown -R ${USER}:${USER} $APP_DIRECTORY && \
             chmod 755 $APP_DIRECTORY"

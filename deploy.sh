@@ -1,13 +1,32 @@
+#!/bin/bash
+
 cd times-real-estate
 
-echo 'Stopping Docker containers...'
-docker compose down --remove-orphans
+echo 'Pulling latest changes...'
+git pull origin dev
 
-echo 'Cleaning up Docker images...'
-docker image prune -f
+echo 'Building new images...'
+docker compose build
 
-echo 'Building and starting containers...'
-docker compose up --build -d
-            
-echo 'Deployment complete. Running containers:'
-docker ps
+echo 'Starting services with rolling update...'
+docker compose up -d --no-deps --build realestate
+
+echo 'Waiting for health checks...'
+sleep 30
+
+echo 'Checking container health...'
+if docker compose ps | grep -q "healthy\|Up"; then
+    echo 'Deployment successful!'
+    
+    echo 'Cleaning up unused images...'
+    docker image prune -f
+    
+    echo 'Running containers:'
+    docker ps
+else
+    echo 'Deployment failed - containers not healthy!'
+    echo 'Rolling back...'
+    docker compose down
+    docker compose up -d
+    exit 1
+fi
