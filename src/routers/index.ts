@@ -48,7 +48,7 @@ router.use("/developers", verifyToken, developerRouter);
 router.use("/areas", areaRouter);
 router.use("/communities", verifyToken, communityRouter);
 router.use("/payment-plans", verifyToken, paymentPlanRouter);
-router.use("/properties", verifyToken, propertyRouter);
+router.use("/properties", propertyRouter);
 router.use("/property-contacts", verifyToken, propertyContactRouter);
 router.use("/contacts", contactRouter);
 router.use("/sellings", sellingRouter);

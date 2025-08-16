@@ -15,15 +15,16 @@ import {
   syncAllProperty,
 } from "@/controllers/property/searchProperties";
 import { Router } from "express";
+import { verifyToken } from "@/middlewares/token";
 
 const router = Router();
 
 // Regular CRUD operations
 router.get("/", getProperties);
 router.get("/:id", getProperty);
-router.post("/", addProperty);
-router.patch("/:id", updateProperty);
-router.delete("/:id", deleteProperty);
+router.post("/", verifyToken, addProperty);
+router.patch("/:id", verifyToken, updateProperty);
+router.delete("/:id", verifyToken, deleteProperty);
 
 // Fast search operations
 router.get("/search/fast", searchPropertiesRedis);
