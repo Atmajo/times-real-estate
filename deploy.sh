@@ -1,7 +1,5 @@
 #!/bin/bash
 
-cd times-real-estate
-
 echo 'Pulling latest changes...'
 git pull origin dev
 
