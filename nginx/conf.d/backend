@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name meet.ojamta.tech www.meet.ojamta.tech;
+    server_name realestate.ojamta.tech www.realestate.ojamta.tech;
 
     location / {
         proxy_pass http://localhost:3000;
