@@ -6,10 +6,6 @@ import { validator } from "@/lib/validator";
 import { getPropertiesQuerySchema } from "@/schemas";
 
 export const getProperties = async (req: Request, res: Response) => {
-  if (!req.user) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
   try {
     // Validate query parameters
     const validatedQuery = validator({
@@ -19,15 +15,13 @@ export const getProperties = async (req: Request, res: Response) => {
     if (!validatedQuery) {
       return res.status(400).json({ error: "Invalid query parameters" });
     }
-    
+
     const {
       sort,
       status,
       type,
       isFeatured,
-      developerId,
-      communityId,
-      areaId,
+      areas,
       minPrice,
       maxPrice,
       minSize,
@@ -66,14 +60,11 @@ export const getProperties = async (req: Request, res: Response) => {
     } = validatedQuery;
 
     const where: any =
-      req.user.role !== "AGENT" ? {} : { userId: req.user.id };
+      req.user?.role !== "AGENT" ? {} : { userId: req.user.id };
 
     if (status) where.status = status;
     if (type) where.type = type;
     if (isFeatured !== undefined) where.isFeatured = isFeatured === "true";
-    if (developerId) where.developerId = developerId;
-    if (communityId) where.communityId = communityId;
-    if (areaId) where.areaId = areaId;
 
     if (minPrice || maxPrice) {
       where.price = {};
@@ -90,7 +81,7 @@ export const getProperties = async (req: Request, res: Response) => {
     // Add property filters for direct field matching
     if (beds) where.beds = beds;
     if (baths) where.baths = baths;
-    
+
     // Range filters
     if (price_range_min) where.price_range_min = price_range_min;
     if (price_range_max) where.price_range_max = price_range_max;
@@ -102,7 +93,7 @@ export const getProperties = async (req: Request, res: Response) => {
     if (year_built_max) where.year_built_max = year_built_max;
     if (garage_min) where.garage_min = garage_min;
     if (garage_max) where.garage_max = garage_max;
-    
+
     // Multi-select array filters
     if (property_type && property_type.length > 0) {
       where.property_type = { hasSome: property_type };
@@ -173,8 +164,16 @@ export const getProperties = async (req: Request, res: Response) => {
       },
     });
 
+    let data = properties;
+    if (areas && typeof areas === 'string') {
+      const areaNames = areas.toLowerCase().split(",").map(area => area.trim());
+      data = properties.filter((property) =>
+        property.area && areaNames.includes(property.area.name.toLowerCase())
+      );
+    }
+
     const { page, limit, totalPages, totalItems, items } = paginate(
-      properties,
+      data,
       Number(req.query.page) || 1,
       Number(req.query.limit) || 10
     );
@@ -187,17 +186,13 @@ export const getProperties = async (req: Request, res: Response) => {
 };
 
 export const getProperty = async (req: Request, res: Response) => {
-  if (!req.user) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
   try {
     const { id } = req.params;
 
     const property = await prisma.property.findUnique({
       where: {
         id,
-        ...(req.user.role === "AGENT" && { userId: req.user.id }),
+        ...(req.user?.role === "AGENT" && { userId: req.user.id }),
       },
       include: {
         developer: true,
@@ -232,7 +227,9 @@ export const getProperty = async (req: Request, res: Response) => {
         status: property.status,
         listingId: property.id,
         price: `$${property.price.toLocaleString()}`,
-        downPayment: property.price_range_min ? `$${parseFloat(property.price_range_min).toLocaleString()}` : "N/A",
+        downPayment: property.price_range_min
+          ? `$${parseFloat(property.price_range_min).toLocaleString()}`
+          : "N/A",
         paymentPlan: property.paymentPlan?.name || "N/A",
         accommodation: property.beds || "N/A",
         possession: "N/A", // This field can be added to schema later if needed

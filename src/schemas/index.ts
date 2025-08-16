@@ -324,9 +324,7 @@ export const getPropertiesQuerySchema = z.object({
     ])
     .optional(),
   isFeatured: z.string().optional(),
-  developerId: z.string().optional(),
-  communityId: z.string().optional(),
-  areaId: z.string().optional(),
+  areas: z.string().optional(),
   minPrice: z.string().optional(),
   maxPrice: z.string().optional(),
   minSize: z.string().optional(),
