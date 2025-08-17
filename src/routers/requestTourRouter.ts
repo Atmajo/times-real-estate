@@ -7,7 +7,6 @@ const router = Router();
 
 router.get("/", getRequestTours);
 router.get("/:id", getRequestTour);
-router.get("/user/:id", getRequestTourByUserId);
 router.post("/", addRequestTour);
 router.patch("/:id", updateRequestTour);
 router.delete("/:id", deleteRequestTour);
