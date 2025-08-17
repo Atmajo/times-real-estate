@@ -21,8 +21,8 @@ export const getRequestTours = async (req: Request, res: Response) => {
     const limit = parseInt(validatedQuery.limit || "10");
 
     let where: any = {};
-    if (validatedQuery.userId) {
-      where.userId = validatedQuery.userId;
+    if (validatedQuery.userId === "true") {
+      where.userId = req.user?.id;
     }
 
     const requestTours = await prisma.requestTour.findMany({
