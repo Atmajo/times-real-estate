@@ -8,6 +8,8 @@ import { verify as userVerify } from "@/controllers/user/verify/verify";
 import { reset as adminPassReset } from "@/controllers/admin/auth/reset";
 import { verifyToken } from "@/middlewares/token";
 import { resendOtp } from "@/controllers/user/auth/resendOtp";
+import { googleAuth } from "@/controllers/user/auth/google/google";
+import { googleCallback } from "@/controllers/user/auth/google/googleCallback";
 
 const router = Router();
 
@@ -30,5 +32,9 @@ router.post("/user/verify", verifyToken, userVerify);
 
 // Update admin-user role
 router.patch("/verify/:userId", verifyToken, updateRole);
+
+// Google OAuth 2
+router.get("/google", googleAuth);
+router.get("/google/callback", googleCallback);
 
 export { router as authRouter };

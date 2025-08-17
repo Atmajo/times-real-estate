@@ -1,25 +1,47 @@
 import "./config/module-alias";
 
 import express, { Express, Request, Response, NextFunction } from "express";
+import logger from "@/logger/logger";
+import cors from "cors";
 import { indexRouter } from "@/routers";
 import { authRouter } from "./routers/authRouter";
 import { config } from "@/config/config";
-import logger from "@/logger/logger";
 import { defaultAdmin } from "./lib/defaultAdmin";
 import { initializeCronJobs } from "./lib/cron";
-import cors from "cors";
+const session = require("express-session");
+import { RedisStore } from "connect-redis";
+import { redis } from "./lib/redis";
 
 const app: Express = express();
 const port = config.port;
 
+const redisStore = new RedisStore({
+  client: redis,
+  prefix: "session:",
+});
+
 app.use(
   cors({
     origin: config.origin,
+    credentials: true,
   })
 );
 app.use(
   express.json({
     limit: "10mb",
+  })
+);
+app.use(
+  session({
+    store: redisStore,
+    secret: config.session_secret,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: config.nodeenv === "production",
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
+    },
   })
 );
 
@@ -58,7 +80,7 @@ app.get("/health", (req: Request, res: Response) => {
     status: "OK",
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
-    environment: config.nodeenv
+    environment: config.nodeenv,
   });
 });
 

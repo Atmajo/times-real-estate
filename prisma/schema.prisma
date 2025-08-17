@@ -85,6 +85,7 @@ model RequestTour {
   name       String
   email      String
   message    String
+  link       String?
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
 
@@ -216,7 +217,7 @@ model Property {
   lot_size   String?
   year_built String?
   garage     String?
-  
+
   // Multi-select fields (arrays)
   property_type         String[]
   property_status       String[]

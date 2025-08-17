@@ -10,4 +10,6 @@ export const config = {
   email: process.env.EMAIL!,
   password: process.env.PASSWORD!,
   origin: process.env.ORIGIN ? process.env.ORIGIN : "*",
+  session_secret: process.env.SESSION_SECRET || "your_session_secret",
+  frontendurl: process.env.FRONTEND_URL!,
 };
