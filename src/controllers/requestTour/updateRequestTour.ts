@@ -70,12 +70,7 @@ export const updateRequestTour = async (req: Request, res: Response) => {
 
 export const deleteRequestTour = async (req: Request, res: Response) => {
   try {
-    const userId = req.user?.id;
     const { id } = req.params;
-
-    if (!userId) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
 
     if (!id) {
       return res.status(400).json({ error: "Request tour ID is required" });
@@ -85,7 +80,6 @@ export const deleteRequestTour = async (req: Request, res: Response) => {
     const existingRequestTour = await prisma.requestTour.findFirst({
       where: { 
         id,
-        userId 
       }
     });
 
@@ -97,7 +91,6 @@ export const deleteRequestTour = async (req: Request, res: Response) => {
       where: { id }
     });
 
-    logger.info(`Request tour ${id} deleted for user ${userId}`);
     res.status(200).json({
       message: "Request tour deleted successfully"
     });
