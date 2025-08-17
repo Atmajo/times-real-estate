@@ -256,6 +256,7 @@ export const getProperty = async (req: Request, res: Response) => {
         paymentPlan: true,
         area: true,
         propertyContacts: true,
+        user: true,
       },
     });
 
