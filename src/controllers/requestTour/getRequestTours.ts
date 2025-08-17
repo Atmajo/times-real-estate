@@ -14,7 +14,10 @@ export const getRequestTours = async (req: Request, res: Response) => {
     }
 
     const query = req.query;
-    const validatedQuery = validator({ schema: getRequestToursSchema, body: query });
+    const validatedQuery = validator({
+      schema: getRequestToursSchema,
+      body: query,
+    });
 
     if (!validatedQuery) {
       return res.status(400).json({ error: "Invalid query parameters" });
@@ -28,14 +31,16 @@ export const getRequestTours = async (req: Request, res: Response) => {
       include: {
         property: {
           include: {
+            user: true,
             developer: true,
             community: true,
-            area: true,
             paymentPlan: true,
-          }
-        }
+            area: true,
+          },
+        },
+        user: true,
       },
-      orderBy: { createdAt: "desc" }
+      orderBy: { createdAt: "desc" },
     });
 
     const paginatedResult = paginate(requestTours, page, limit);
@@ -43,7 +48,7 @@ export const getRequestTours = async (req: Request, res: Response) => {
     logger.info(`Request tours retrieved for user ${userId}`);
     res.status(200).json({
       message: "Request tours retrieved successfully",
-      ...paginatedResult
+      ...paginatedResult,
     });
   } catch (error) {
     logger.error(`Error retrieving request tours: ${error}`);
@@ -65,27 +70,21 @@ export const getRequestTour = async (req: Request, res: Response) => {
     }
 
     const requestTour = await prisma.requestTour.findFirst({
-      where: { 
+      where: {
         id,
-        userId 
+        userId,
       },
       include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          }
-        },
+        user: true,
         property: {
           include: {
             developer: true,
             community: true,
             area: true,
             paymentPlan: true,
-          }
-        }
-      }
+          },
+        },
+      },
     });
 
     if (!requestTour) {

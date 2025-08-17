@@ -11,7 +11,7 @@ export const createCalendarEvent = async (req: Request, res: Response) => {
 
     if (!tokens) {
       return res.status(401).json({
-        error: "Unauthorized",
+        error: "Google tokens are missing",
       });
     }
 
