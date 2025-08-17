@@ -21,7 +21,13 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          ssh -i ~/.ssh/private_key ${{ secrets.USERNAME }}@${{ secrets.HOST }} "./restart.sh"
+          echo "Connecting to EC2 instance..."
+          ssh -i ~/.ssh/private_key -o ConnectTimeout=10 -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
+            echo "Successfully connected to EC2 instance"
+            echo "Executing restart script..."
+            ./restart.sh
+            echo "Deployment completed"
+          EOF
 
       - name: Clean up
         if: always()
