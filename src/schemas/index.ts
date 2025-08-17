@@ -303,6 +303,7 @@ export const propertyFiltersSchema = z.object({
 
 export const getPropertiesQuerySchema = z.object({
   // Basic filters
+  mode: z.string().optional(),
   page: z.string().optional(),
   limit: z.string().optional(),
   sort: z.string().optional(),

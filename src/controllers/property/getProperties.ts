@@ -7,7 +7,6 @@ import { getPropertiesQuerySchema } from "@/schemas";
 
 export const getProperties = async (req: Request, res: Response) => {
   try {
-    // Validate query parameters
     const validatedQuery = validator({
       schema: getPropertiesQuerySchema,
       body: req.query,
@@ -17,6 +16,7 @@ export const getProperties = async (req: Request, res: Response) => {
     }
 
     const {
+      mode,
       sort,
       status,
       type,
@@ -193,7 +193,7 @@ export const getProperties = async (req: Request, res: Response) => {
       if (parsedValue?.length)
         where.property_features = { hasSome: parsedValue };
     }
-    
+
     const properties = await prisma.property.findMany({
       where,
       include: {
@@ -202,9 +202,13 @@ export const getProperties = async (req: Request, res: Response) => {
         paymentPlan: true,
         area: true,
         propertyContacts: true,
+        user: true,
       },
       orderBy: {
-        createdAt: sort === "desc" ? "desc" : "asc",
+        createdAt:
+          sort === "desc" || mode === "CURRENT" || mode === "NEW"
+            ? "desc"
+            : "asc",
       },
     });
 
