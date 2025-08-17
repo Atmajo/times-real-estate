@@ -906,7 +906,7 @@ export const getCollectionsSchema = z.object({
 export const addRequestTourSchema = z.object({
   propertyId: z.string().min(1, "Property ID is required"),
   mode: z.enum(["OFFLINE", "ONLINE"], { message: "Mode is required" }),
-  date: z.date({ message: "Invalid date" }),
+  date: z.coerce.date({ message: "Invalid date" }),
   timeframe: z.enum(["MORNING", "AFTERNOON", "EVENING", "ANYTIME"], {
     message: "Timeframe is required",
   }),
@@ -922,7 +922,7 @@ export const getRequestToursSchema = z.object({
 
 export const updateRequestTourSchema = z.object({
   mode: z.enum(["OFFLINE", "ONLINE"]).optional(),
-  date: z.date({ message: "Invalid date" }).optional(),
+  date: z.coerce.date({ message: "Invalid date" }).optional(),
   timeframe: z.enum(["MORNING", "AFTERNOON", "EVENING", "ANYTIME"]).optional(),
   name: z.string().optional(),
   email: z.email().optional(),
