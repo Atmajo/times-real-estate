@@ -29,7 +29,7 @@ export const getRequestTours = async (req: Request, res: Response) => {
       where.userId = req.user?.id;
     }
 
-    if (req.user.role === "ADMIN") {
+    if (req.user.role === "AGENT") {
       where.property = {
         userId: req.user.id,
       };
