@@ -13,23 +13,17 @@ export const googleCallback = async (req: Request, res: Response) => {
 
     const tokens = await generateGoogleToken(code as unknown as string);
 
+    if (!req.session) {
+      return res
+        .status(500)
+        .json({ error: "Session middleware is not initialized." });
+    }
+
     req.session.tokens = tokens;
 
     const frontendurl = config.frontendurl;
 
-    const expiryDateInSeconds =
-      tokens.expiry_date || Math.floor(Date.now() / 1000) + 3600;
-    const currentTimeInSeconds = Math.floor(Date.now() / 1000);
-    const secondsRemaining = expiryDateInSeconds - currentTimeInSeconds;
-    const daysRemaining = Math.floor(secondsRemaining / (60 * 60 * 24));
-
-    res.redirect(
-      frontendurl +
-        "/dashboard/request-tour?refresh_token=" +
-        tokens.refresh_token +
-        "&days_remaining=" +
-        daysRemaining
-    );
+    res.redirect(frontendurl + "/dashboard/request-tour");
   } catch (error) {
     console.log(error);
     logger.error("Google authentication failed", error);

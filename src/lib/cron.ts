@@ -15,7 +15,7 @@ const ping = async () => {
     }
 
     const data = await response.json();
-    console.log("Ping response data:", data.message);
+    console.log("Ping response data:", (data as any).message);
   } catch (error) {
     logger.error("Cron job failed", {
       error: error instanceof Error ? error.message : String(error),

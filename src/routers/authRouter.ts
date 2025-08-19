@@ -33,7 +33,7 @@ router.post("/user/verify", verifyToken, userVerify);
 // Update admin-user role
 router.patch("/verify/:userId", verifyToken, updateRole);
 
-// Google OAuth 2
+// Google OAuth 2 - with session logging for debugging
 router.get("/google", googleAuth);
 router.get("/google/callback", googleCallback);
 

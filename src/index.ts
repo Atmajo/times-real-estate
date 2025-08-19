@@ -20,10 +20,28 @@ const redisStore = new RedisStore({
   prefix: "session:",
 });
 
+redisStore.on("error", (err) => {
+  logger.error("Redis store error:", err);
+});
+
+redisStore.on("connect", () => {
+  logger.info("Redis store connected");
+});
+
+redisStore.on("disconnect", () => {
+  logger.warn("Redis store disconnected");
+});
+
 app.use(
   cors({
-    origin: config.origin,
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "http://localhost:3002",
+      "https://real-estate-panel-five.vercel.app",
+    ],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   })
 );
 app.use(
@@ -33,14 +51,17 @@ app.use(
 );
 app.use(
   session({
+    name: "realestate.sid",
     store: redisStore,
     secret: config.session_secret,
     resave: false,
     saveUninitialized: false,
+
     cookie: {
-      secure: config.nodeenv === "production",
+      // domain: config.nodeenv === "production" && ".ojamta.tech",
       httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
+      secure: config.nodeenv === "production",
+      maxAge: 1000 * 60 * 60 * 24 * 30,
     },
   })
 );
@@ -74,7 +95,6 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/api", indexRouter);
 app.use("/auth", authRouter);
 
-// Health check endpoint
 app.get("/health", (req: Request, res: Response) => {
   res.status(200).json({
     status: "OK",

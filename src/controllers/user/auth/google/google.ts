@@ -1,13 +1,6 @@
 import logger from "@/logger/logger";
 import { generateGoogleRedirectUrl } from "@/service/google";
 import { Request, Response } from "express";
-import { Credentials } from "google-auth-library";
-
-declare module "express-session" {
-  interface SessionData {
-    tokens?: Credentials;
-  }
-}
 
 export const googleAuth = async (req: Request, res: Response) => {
   try {

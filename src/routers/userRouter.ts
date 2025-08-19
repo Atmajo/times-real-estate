@@ -3,6 +3,7 @@ import { getUsers } from "@/controllers/user/getUsers";
 import { createCalendarEvent } from "@/controllers/user/meet/createCalenderEvent";
 import { profile } from "@/controllers/user/profile/profile";
 import { updateProfile } from "@/controllers/user/profile/updateProfile";
+import { sessionMiddleware } from "@/middlewares/sessionMiddleware";
 import { Router } from "express";
 
 const router = Router();
@@ -12,6 +13,7 @@ router.get("/profile", profile);
 router.patch("/profile", updateProfile);
 router.delete("/:id", deleteUser);
 
-router.post("/meet/create", createCalendarEvent)
+// Google Calendar routes - require Google authentication
+router.post("/meet/create", sessionMiddleware, createCalendarEvent);
 
 export { router as userRouter };
