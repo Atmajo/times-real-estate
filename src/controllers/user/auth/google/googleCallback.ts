@@ -15,8 +15,10 @@ export const googleCallback = async (req: Request, res: Response) => {
 
     req.session.tokens = tokens;
 
+    const frontendurl = req.headers.origin || config.frontendurl;
+
     res.redirect(
-      config.frontendurl +
+      frontendurl +
         "/dashboard/request-tour?refresh_token=" +
         tokens.refresh_token +
         "&expiry_date=" +
