@@ -28,7 +28,7 @@ export const getRequestTours = async (req: Request, res: Response) => {
     if (validatedQuery.userId === "true") {
       where.userId = req.user?.id;
     }
-
+    
     if (req.user.role === "AGENT") {
       where.property = {
         userId: req.user.id,

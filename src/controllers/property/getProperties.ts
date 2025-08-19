@@ -11,6 +11,7 @@ export const getProperties = async (req: Request, res: Response) => {
       schema: getPropertiesQuerySchema,
       body: req.query,
     });
+    
     if (!validatedQuery) {
       return res.status(400).json({ error: "Invalid query parameters" });
     }

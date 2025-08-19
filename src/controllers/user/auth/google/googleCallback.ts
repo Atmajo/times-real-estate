@@ -15,7 +15,13 @@ export const googleCallback = async (req: Request, res: Response) => {
 
     req.session.tokens = tokens;
 
-    res.redirect(config.frontendurl + "/dashboard/request-tour");
+    res.redirect(
+      config.frontendurl +
+        "/dashboard/request-tour?refresh_token=" +
+        tokens.refresh_token +
+        "&expiry_date=" +
+        tokens.expiry_date
+    );
   } catch (error) {
     console.log(error);
     logger.error("Google authentication failed", error);
