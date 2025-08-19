@@ -6,6 +6,10 @@ import { Request, Response } from "express";
 import { paginate } from "@/lib/paginate";
 
 export const getRequestTours = async (req: Request, res: Response) => {
+  if (!req.user) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
   try {
     const query = req.query;
     const validatedQuery = validator({
@@ -23,6 +27,12 @@ export const getRequestTours = async (req: Request, res: Response) => {
     let where: any = {};
     if (validatedQuery.userId === "true") {
       where.userId = req.user?.id;
+    }
+
+    if (req.user.role === "ADMIN") {
+      where.property = {
+        userId: req.user.id,
+      };
     }
 
     const requestTours = await prisma.requestTour.findMany({
@@ -95,25 +105,22 @@ export const getRequestTour = async (req: Request, res: Response) => {
 export const getRequestTourByUserId = async (req: Request, res: Response) => {
   try {
     const userId = req.user?.id;
-    const { id } = req.params;
 
     if (!userId) {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    if (!id) {
-      return res.status(400).json({ error: "Request tour ID is required" });
-    }
-
-    const requestTour = await prisma.requestTour.findFirst({
+    const requestTour = await prisma.requestTour.findMany({
       where: {
-        id,
-        userId,
+        property: {
+          userId: userId,
+        },
       },
       include: {
         user: true,
         property: {
           include: {
+            user: true,
             developer: true,
             community: true,
             area: true,
@@ -127,7 +134,8 @@ export const getRequestTourByUserId = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Request tour not found" });
     }
 
-    logger.info(`Request tour ${id} retrieved for user ${userId}`);
+    const paginatedData = paginate;
+
     res.status(200).json({
       message: "Request tour retrieved successfully",
       data: requestTour,

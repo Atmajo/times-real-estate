@@ -851,13 +851,6 @@ export const addPropertyContactSchema = z.object({
   name: z.string().min(1, "Name is required"),
   phone: z.string().min(1, "Phone is required"),
   email: z.string().email("Invalid email format"),
-  type: z.enum([
-    "Individual",
-    "Agent",
-    "Investor",
-    "Do_not_want_to_disclose",
-    "Others",
-  ]),
   message: z.string().min(1, "Message is required"),
 });
 
@@ -865,15 +858,6 @@ export const updatePropertyContactSchema = z.object({
   name: z.string().optional(),
   phone: z.string().optional(),
   email: z.string().email().optional(),
-  type: z
-    .enum([
-      "Individual",
-      "Agent",
-      "Investor",
-      "Do_not_want_to_disclose",
-      "Others",
-    ])
-    .optional(),
   message: z.string().optional(),
 });
 

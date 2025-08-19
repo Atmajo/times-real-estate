@@ -28,14 +28,6 @@ enum Status {
   Resale
 }
 
-enum PropertyUserType {
-  Individual
-  Agent
-  Investor
-  Do_not_want_to_disclose
-  Others
-}
-
 enum Usertype {
   AGENT
   ADMIN
@@ -264,7 +256,6 @@ model PropertyContact {
   name       String
   phone      String
   email      String
-  type       PropertyUserType
   message    String
   createdAt  DateTime         @default(now())
   updatedAt  DateTime         @updatedAt

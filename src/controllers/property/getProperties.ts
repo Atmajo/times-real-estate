@@ -332,7 +332,6 @@ export const getProperty = async (req: Request, res: Response) => {
           name: contact.name,
           phone: contact.phone,
           email: contact.email,
-          type: contact.type,
           message: contact.message,
         })) || [],
 

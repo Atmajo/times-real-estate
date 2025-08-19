@@ -1,7 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import { validator } from "@/lib/validator";
 import logger from "@/logger/logger";
-import { addPropertyContactSchema, updatePropertyContactSchema } from "@/schemas";
+import {
+  addPropertyContactSchema,
+  updatePropertyContactSchema,
+} from "@/schemas";
 import { Request, Response } from "express";
 import { paginate } from "@/lib/paginate";
 
@@ -15,22 +18,21 @@ export const addPropertyContact = async (req: Request, res: Response) => {
     }
 
     // Check if property exists
-    const property = await prisma.property.findUnique({ 
-      where: { id: validatedData.propertyId } 
+    const property = await prisma.property.findUnique({
+      where: { id: validatedData.propertyId },
     });
-    
+
     if (!property) {
       return res.status(404).json({ error: "Property not found" });
     }
 
-    const { propertyId, name, phone, email, type, message } = validatedData;
+    const { propertyId, name, phone, email, message } = validatedData;
     const propertyContact = await prisma.propertyContact.create({
       data: {
         propertyId,
         name,
         phone,
         email,
-        type,
         message,
       },
       include: {
@@ -40,7 +42,7 @@ export const addPropertyContact = async (req: Request, res: Response) => {
 
     return res.status(201).json({
       message: "Property contact added successfully",
-      propertyContact,
+      data: propertyContact,
     });
   } catch (error) {
     logger.error("Error in addPropertyContact controller:", error);
@@ -51,7 +53,7 @@ export const addPropertyContact = async (req: Request, res: Response) => {
 export const getPropertyContacts = async (req: Request, res: Response) => {
   try {
     const { propertyId } = req.query;
-    
+
     const where: any = {};
     if (propertyId) where.propertyId = propertyId;
 
@@ -60,13 +62,15 @@ export const getPropertyContacts = async (req: Request, res: Response) => {
       include: {
         property: {
           include: {
+            user: true,
+            area: true,
             developer: true,
             community: true,
           },
         },
       },
       orderBy: {
-        createdAt: 'desc',
+        createdAt: "desc",
       },
     });
 
@@ -86,12 +90,14 @@ export const getPropertyContacts = async (req: Request, res: Response) => {
 export const getPropertyContact = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    
+
     const propertyContact = await prisma.propertyContact.findUnique({
       where: { id },
       include: {
         property: {
           include: {
+            user: true,
+            area: true,
             developer: true,
             community: true,
           },
@@ -103,7 +109,7 @@ export const getPropertyContact = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Property contact not found" });
     }
 
-    return res.status(200).json({ propertyContact });
+    return res.status(200).json({ data: propertyContact });
   } catch (error) {
     logger.error("Error in getPropertyContact controller:", error);
     res.status(500).json({ error: "Failed to get property contact" });
@@ -115,27 +121,39 @@ export const updatePropertyContact = async (req: Request, res: Response) => {
     const { id } = req.params;
     const body = req.body;
 
-    const existingPropertyContact = await prisma.propertyContact.findUnique({ where: { id } });
+    const existingPropertyContact = await prisma.propertyContact.findUnique({
+      where: { id },
+    });
     if (!existingPropertyContact) {
       return res.status(404).json({ error: "Property contact not found" });
     }
 
-    const validatedData = validator({ schema: updatePropertyContactSchema, body });
+    const validatedData = validator({
+      schema: updatePropertyContactSchema,
+      body,
+    });
     if (!validatedData) {
       return res.status(400).json({ error: "Invalid data" });
     }
-    
+
     const propertyContact = await prisma.propertyContact.update({
       where: { id },
       data: validatedData,
       include: {
-        property: true,
+        property: {
+          include: {
+            user: true,
+            area: true,
+            developer: true,
+            community: true,
+          },
+        },
       },
     });
 
     return res.status(200).json({
       message: "Property contact updated successfully",
-      propertyContact,
+      data: propertyContact,
     });
   } catch (error) {
     logger.error("Error in updatePropertyContact controller:", error);
@@ -146,7 +164,9 @@ export const updatePropertyContact = async (req: Request, res: Response) => {
 export const deletePropertyContact = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const existingPropertyContact = await prisma.propertyContact.findUnique({ where: { id } });
+    const existingPropertyContact = await prisma.propertyContact.findUnique({
+      where: { id },
+    });
 
     if (!existingPropertyContact) {
       return res.status(404).json({ error: "Property contact not found" });
