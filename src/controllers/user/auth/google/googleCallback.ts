@@ -15,14 +15,20 @@ export const googleCallback = async (req: Request, res: Response) => {
 
     req.session.tokens = tokens;
 
-    const frontendurl = req.headers.origin || config.frontendurl;
+    const frontendurl = config.frontendurl;
+
+    const expiryDateInSeconds =
+      tokens.expiry_date || Math.floor(Date.now() / 1000) + 3600;
+    const currentTimeInSeconds = Math.floor(Date.now() / 1000);
+    const secondsRemaining = expiryDateInSeconds - currentTimeInSeconds;
+    const daysRemaining = Math.floor(secondsRemaining / (60 * 60 * 24));
 
     res.redirect(
       frontendurl +
         "/dashboard/request-tour?refresh_token=" +
         tokens.refresh_token +
-        "&expiry_date=" +
-        tokens.expiry_date
+        "&days_remaining=" +
+        daysRemaining
     );
   } catch (error) {
     console.log(error);
