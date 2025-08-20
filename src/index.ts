@@ -38,6 +38,7 @@ app.use(
       "http://localhost:3000",
       "http://localhost:3001",
       "http://localhost:3002",
+      "https://real-estate-web-nu-nine.vercel.app",
       "https://real-estate-panel-five.vercel.app",
     ],
     credentials: true,
