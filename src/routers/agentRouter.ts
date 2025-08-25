@@ -9,6 +9,7 @@ import { deleteAgent } from "@/controllers/agent/deleteAgent";
 import { updateAgent } from "@/controllers/agent/updateAgent";
 import { resendVerification } from "@/controllers/agent/resendVerification";
 import { getAgentByArea } from "@/controllers/agent/area/getAgentByArea";
+import { givePermitToAddProperty } from "@/controllers/agent/property/givePermitToAddProperty";
 
 const router = Router();
 
@@ -27,5 +28,8 @@ router.post("/query", addQuery);
 router.delete("/query/:id", deleteQuery);
 
 router.get("/areas", verifyToken, getAgentByArea);
+
+// Give permit to add property
+router.post("/property/permit", verifyToken, givePermitToAddProperty);
 
 export { router as agentRouter };

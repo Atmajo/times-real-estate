@@ -10,6 +10,7 @@ declare global {
         email: string;
         role: string;
         otp?: string;
+        permittedToAddProperty?: boolean;
         iat: number;
         exp: number;
       };
@@ -35,6 +36,7 @@ export const verifyToken = (
       email: string;
       role: string;
       otp?: string;
+      permittedToAddProperty?: boolean;
       iat: number;
       exp: number;
     };
@@ -51,6 +53,14 @@ export const verifyToken = (
     if (decoded.exp < Math.floor(Date.now() / 1000)) {
       res.status(401).json({ error: "Token expired" });
       return;
+    }
+
+    if (
+      decoded.role === "USER" &&
+      !decoded.permittedToAddProperty &&
+      req.originalUrl.includes("/property")
+    ) {
+      return res.status(403).json({ error: "Forbidden route" });
     }
 
     req.user = decoded;
