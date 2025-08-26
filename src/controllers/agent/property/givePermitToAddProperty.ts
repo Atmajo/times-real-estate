@@ -10,10 +10,10 @@ export const givePermitToAddProperty = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const { userId } = req.body;
+    const { email } = req.body;
 
     const user = await prisma.user.findUnique({
-      where: { id: userId },
+      where: { email: email },
       select: {
         id: true,
         name: true,
@@ -32,6 +32,8 @@ export const givePermitToAddProperty = async (req: Request, res: Response) => {
         email: user.email,
         role: user.role,
         permittedToAddProperty: true,
+        isDraft: true,
+        agentId: req.user.id,
       },
       config.jwtsecret,
       {

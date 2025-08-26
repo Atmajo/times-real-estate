@@ -11,6 +11,8 @@ declare global {
         role: string;
         otp?: string;
         permittedToAddProperty?: boolean;
+        agentId?: string;
+        isDraft?: boolean;
         iat: number;
         exp: number;
       };
@@ -37,6 +39,8 @@ export const verifyToken = (
       role: string;
       otp?: string;
       permittedToAddProperty?: boolean;
+      agentId?: string;
+      isDraft?: boolean;
       iat: number;
       exp: number;
     };

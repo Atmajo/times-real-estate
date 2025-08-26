@@ -178,7 +178,7 @@ model Property {
   areaId        String
   developerId   String
   communityId   String
-  paymentPlanId String
+  paymentPlanId String?
 
   // details
   name     String
@@ -188,12 +188,13 @@ model Property {
   price    Float
 
   // pdf files
-  brochure            String
-  floorPlanBrochure   String
-  paymentPlanBrochure String
+  brochure            String?
+  floorPlanBrochure   String?
+  paymentPlanBrochure String?
 
   // featuring
   isFeatured Boolean
+  isDraft    Boolean @default(false)
 
   // location
   lat  String
@@ -232,7 +233,7 @@ model Property {
 
   // Dates
   availableDates DateTime[]
-  handover       DateTime
+  handover       DateTime?
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
 
@@ -241,7 +242,7 @@ model Property {
   user        User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
   developer   Developer   @relation(fields: [developerId], references: [id], onDelete: Cascade)
   community   Community   @relation(fields: [communityId], references: [id], onDelete: Cascade)
-  paymentPlan PaymentPlan @relation(fields: [paymentPlanId], references: [id])
+  paymentPlan PaymentPlan? @relation(fields: [paymentPlanId], references: [id])
 
   collection       Collection[]
   requestTour      RequestTour[]
@@ -251,14 +252,14 @@ model Property {
 }
 
 model PropertyContact {
-  id         String           @id @default(cuid())
-  propertyId String           @unique
+  id         String   @id @default(cuid())
+  propertyId String   @unique
   name       String
   phone      String
   email      String
   message    String
-  createdAt  DateTime         @default(now())
-  updatedAt  DateTime         @updatedAt
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   // Relations
   property Property @relation(fields: [propertyId], references: [id])

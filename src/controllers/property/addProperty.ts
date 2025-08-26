@@ -4,12 +4,13 @@ import { syncPropertyToRedis } from "@/lib/propertySearchSync";
 import logger from "@/logger/logger";
 import { addPropertySchema } from "@/schemas";
 import { Request, Response } from "express";
+import { config } from "@/config/config";
 
 export const addProperty = async (req: Request, res: Response) => {
   if (!req.user) {
     return res.status(401).json({ error: "Unauthorized" });
   }
-  
+
   try {
     const body = req.body;
     const validatedData = validator({ schema: addPropertySchema, body });
@@ -31,6 +32,8 @@ export const addProperty = async (req: Request, res: Response) => {
       prisma.area.findUnique({ where: { id: validatedData.areaId } }),
     ]);
 
+    const userId = req.user.role === "AGENT" ? req.user.id : req.user.agentId;
+
     if (!developer)
       return res.status(404).json({ error: "Developer not found" });
     if (!community)
@@ -38,8 +41,14 @@ export const addProperty = async (req: Request, res: Response) => {
     if (!paymentPlan)
       return res.status(404).json({ error: "Payment plan not found" });
     if (!area) return res.status(404).json({ error: "Area not found" });
+
     const property = await prisma.property.create({
-      data: { ...validatedData, userId: req.user.id },
+      data: {
+        ...validatedData,
+        userId: userId,
+        isFeatured: req.user.isDraft ? false : true,
+        isDraft: req.user.isDraft || false,
+      },
       include: {
         developer: true,
         community: true,
@@ -47,17 +56,21 @@ export const addProperty = async (req: Request, res: Response) => {
         area: true,
       },
     });
-    
-    syncPropertyToRedis(property.id).catch(error => {
-      logger.error(`Failed to sync new property ${property.id} to Redis:`, error);
-    });
-    
+
+    config.nodeenv !== "dev" &&
+      syncPropertyToRedis(property.id).catch((error) => {
+        logger.error(
+          `Failed to sync new property ${property.id} to Redis:`,
+          error
+        );
+      });
+
     return res.status(201).json({
       message: "Property added successfully",
       property,
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     logger.error("Error in addProperty controller:", error);
     res.status(500).json({ error: "Failed to add property" });
   }
