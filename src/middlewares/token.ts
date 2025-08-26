@@ -65,6 +65,9 @@ export const verifyToken = (
 
     req.user = decoded;
 
+    if (config.nodeenv === "dev")
+      console.log("User decoded from token:", decoded);
+
     next();
   } catch (error) {
     res.status(401).json({ error: "Unauthorized" });
