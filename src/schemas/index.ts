@@ -16,9 +16,7 @@ export const loginSchema = z.object({
 export const addDeveloperSchema = z.object({
   logo: z.url({ message: "Provide a valid logo URL" }).optional(),
   name: z.string().min(1, "Name is required"),
-  description: z
-    .string()
-    .min(20, "Description must be at least 20 characters"),
+  description: z.string().min(20, "Description must be at least 20 characters"),
 });
 
 export const updateDeveloperSchema = z.object({
@@ -81,7 +79,7 @@ export const propertyFiltersSchema = z.object({
   // Single selection fields
   beds: z.enum(["ANY", "1", "2", "3", "4+"]).optional(),
   baths: z.enum(["ANY", "1", "2", "3", "4+"]).optional(),
-  
+
   // Range fields
   price_range_min: z.string().optional(),
   price_range_max: z.string().optional(),
@@ -93,7 +91,7 @@ export const propertyFiltersSchema = z.object({
   year_built_max: z.string().optional(),
   garage_min: z.string().optional(),
   garage_max: z.string().optional(),
-  
+
   // Multi-select fields
   property_type: z
     .array(
@@ -315,7 +313,7 @@ export const getPropertiesQuerySchema = z.object({
   maxPrice: z.string().optional(),
   minSize: z.string().optional(),
   maxSize: z.string().optional(),
-  
+
   // Property filter fields
   beds: z.string().optional(),
   baths: z.string().optional(),
@@ -372,16 +370,20 @@ export const addPropertySchema = z.object({
     "Lofts",
   ]),
   isFeatured: z.boolean(),
-  brochure: z.string().url("Brochure must be a valid URL"),
-  floorPlanBrochure: z.string().url("Floor plan brochure must be a valid URL"),
+  brochure: z.string().url("Brochure must be a valid URL").optional(),
+  floorPlanBrochure: z
+    .string()
+    .url("Floor plan brochure must be a valid URL")
+    .optional(),
   paymentPlanBrochure: z
-  .string()
-  .url("Payment plan brochure must be a valid URL"),
+    .string()
+    .url("Payment plan brochure must be a valid URL")
+    .optional(),
   lat: z.string().min(1, "Latitude is required"),
   long: z.string().min(1, "Longitude is required"),
   availableDates: z.array(z.coerce.date()).optional(),
-  handover: z.coerce.date({ message: "Invalid handover date" }),
-  
+  handover: z.coerce.date({ message: "Invalid handover date" }).optional(),
+
   // Property filter fields (optional for add)
   beds: z.enum(["ANY", "1", "2", "3", "4+"]).optional(),
   baths: z.enum(["ANY", "1", "2", "3", "4+"]).optional(),
@@ -631,7 +633,7 @@ export const updatePropertySchema = z.object({
   lat: z.string().optional(),
   long: z.string().optional(),
   availableDates: z.array(z.coerce.date()).optional(),
-  
+
   // Property filter fields (all optional for update)
   beds: z.enum(["ANY", "1", "2", "3", "4+"]).optional(),
   baths: z.enum(["ANY", "1", "2", "3", "4+"]).optional(),
@@ -923,5 +925,5 @@ export const addQuerySchema = z.object({
   email: z.email({ message: "Invalid email" }),
   phone: z.string().min(7, { message: "Invalid mobile number" }),
   message: z.string(),
-  area: z.array(z.string())
+  area: z.array(z.string()),
 });
