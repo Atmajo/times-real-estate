@@ -369,7 +369,7 @@ export const addPropertySchema = z.object({
     "Warehouse",
     "Lofts",
   ]),
-  isFeatured: z.boolean(),
+  isFeatured: z.boolean().optional(),
   brochure: z.string().url("Brochure must be a valid URL").optional(),
   floorPlanBrochure: z
     .string()
