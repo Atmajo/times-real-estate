@@ -26,9 +26,10 @@ export const addProperty = async (req: Request, res: Response) => {
       prisma.community.findUnique({
         where: { id: validatedData.communityId },
       }),
-      prisma.paymentPlan.findUnique({
-        where: { id: validatedData.paymentPlanId },
-      }),
+      validatedData.paymentPlanId &&
+        prisma.paymentPlan.findUnique({
+          where: { id: validatedData.paymentPlanId },
+        }),
       prisma.area.findUnique({ where: { id: validatedData.areaId } }),
     ]);
 
@@ -38,7 +39,7 @@ export const addProperty = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Developer not found" });
     if (!community)
       return res.status(404).json({ error: "Community not found" });
-    if (!paymentPlan)
+    if (validatedData.paymentPlanId && !paymentPlan)
       return res.status(404).json({ error: "Payment plan not found" });
     if (!area) return res.status(404).json({ error: "Area not found" });
 
