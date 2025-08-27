@@ -351,7 +351,7 @@ export const addPropertySchema = z.object({
   areaId: z.string().min(1, "Area ID is required"),
   developerId: z.string().min(1, "Developer ID is required"),
   communityId: z.string().min(1, "Community ID is required"),
-  paymentPlanId: z.string().min(1, "Payment plan ID is required"),
+  paymentPlanId: z.string().min(1, "Payment plan ID is required").optional(),
   images: z.array(z.string().url()).min(1, "At least one image is required"),
   name: z.string().min(1, "Name is required"),
   overview: z.string().min(1, "Overview is required"),
