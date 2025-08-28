@@ -12,25 +12,11 @@ export const givePermitToAddProperty = async (req: Request, res: Response) => {
 
     const { email } = req.body;
 
-    const user = await prisma.user.findUnique({
-      where: { email: email },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-      },
-    });
-
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
     const token = jwt.sign(
       {
-        id: user.id,
-        email: user.email,
-        role: user.role,
+        id: Math.random().toString(36).substring(2, 15),
+        email: email,
+        role: "USER",
         permittedToAddProperty: true,
         isDraft: true,
         agentId: req.user.id,
@@ -43,11 +29,12 @@ export const givePermitToAddProperty = async (req: Request, res: Response) => {
 
     const link = `${config.clienturl}/property?token=${token}`;
 
-    await sendAddPropertyMail(user.email, link);
-    
-    return res
-      .status(200)
-      .json({ message: "Property adding email sent successfully", success: true });
+    await sendAddPropertyMail(email, link);
+
+    return res.status(200).json({
+      message: "Property adding email sent successfully",
+      success: true,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error", success: false });
