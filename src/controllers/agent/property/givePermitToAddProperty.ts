@@ -1,5 +1,4 @@
 import { config } from "@/config/config";
-import { prisma } from "@/lib/prisma";
 import { sendAddPropertyMail } from "@/mails/sendAddPropertyMail";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
