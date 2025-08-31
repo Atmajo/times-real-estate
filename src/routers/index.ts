@@ -17,6 +17,7 @@ import { agentRouter } from "./agentRouter";
 import { userRouter } from "./userRouter";
 import { adminRouter } from "./adminRouter";
 import { sellingRouter } from "./sellingRouter";
+import { dashboardRouter } from "./dashboardRouter";
 
 const router = Router();
 
@@ -56,6 +57,7 @@ router.use("/collections", verifyToken, collectionRouter);
 router.use("/request-tours", verifyToken, requestTourRouter);
 router.use("/agent", agentRouter);
 router.use("/admin", verifyToken, adminRouter);
+router.use("/dashboard", verifyToken, dashboardRouter);
 router.use("/file", verifyToken, fileRouter);
 
 export { router as indexRouter };
