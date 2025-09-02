@@ -106,7 +106,7 @@ app.get("/health", (req: Request, res: Response) => {
 });
 
 app.listen(port, async () => {
-  config.nodeenv !== "dev" && initializeCronJobs();
+  initializeCronJobs();
   await defaultAdmin();
   logger.info(`Server is running at http://localhost:${port}`);
 });

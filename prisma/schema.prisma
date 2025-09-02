@@ -109,6 +109,7 @@ model User {
   property    Property[]
   collection  Collection[]
   requestTour RequestTour[]
+  alerts      Alert[]
 
   @@map("user")
 }
@@ -308,4 +309,41 @@ model AgentQuery {
   updatedAt DateTime @updatedAt
 
   @@map("agentQuery")
+}
+
+model Alert {
+  id                    String    @id @default(cuid())
+  userId                String?
+  email                 String
+  name                  String?
+  
+  // Location criteria
+  areas                 String[]
+  communities           String[]
+  
+  // Property criteria
+  propertyTypes         String[]
+  propertyStatus        String[]
+  minPrice              Float?
+  maxPrice              Float?
+  minBeds               Int?
+  maxBeds               Int?
+  minBaths              Int?
+  maxBaths              Int?
+  minSqft               Float?
+  maxSqft               Float?
+  
+  // Additional filters
+  features              String[]
+  developers            String[]
+  
+  isActive              Boolean   @default(true)
+  lastSent              DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  // Relations
+  user                  User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("alerts")
 }

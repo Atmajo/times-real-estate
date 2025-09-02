@@ -18,6 +18,7 @@ import { userRouter } from "./userRouter";
 import { adminRouter } from "./adminRouter";
 import { sellingRouter } from "./sellingRouter";
 import { dashboardRouter } from "./dashboardRouter";
+import { alertRouter } from "./alertRouter";
 
 const router = Router();
 
@@ -59,5 +60,6 @@ router.use("/agent", agentRouter);
 router.use("/admin", verifyToken, adminRouter);
 router.use("/dashboard", verifyToken, dashboardRouter);
 router.use("/file", verifyToken, fileRouter);
+router.use("/alerts", alertRouter); // Alert router - no authentication required
 
 export { router as indexRouter };

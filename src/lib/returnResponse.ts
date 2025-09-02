@@ -210,7 +210,7 @@ export class ReturnResponse {
   ): Response {
     // Log the full error for debugging
     logger.error(`Error in ${context}:`, error);
-
+    
     // Handle specific error types
     if (error instanceof Error) {
       if (error.message.startsWith("Validation failed")) {

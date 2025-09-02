@@ -2,6 +2,7 @@ import { schedule } from "node-cron";
 import { config } from "@/config/config";
 import { syncAllPropertiesToRedis } from "@/lib/propertySearchSync";
 import { clearSearchCache } from "@/lib/redis";
+import { AlertService } from "@/services/alertService";
 import logger from "@/logger/logger";
 
 const ping = async () => {
@@ -50,6 +51,19 @@ const clearRedisCache = async () => {
   }
 };
 
+const processPropertyAlerts = async () => {
+  try {
+    logger.info("Starting scheduled property alerts processing...");
+    await AlertService.processAllAlerts();
+    logger.info("Scheduled property alerts processing completed successfully");
+  } catch (error) {
+    logger.error("Scheduled property alerts processing failed:", {
+      error: error instanceof Error ? error.message : String(error),
+      timestamp: new Date().toISOString(),
+    });
+  }
+};
+
 const jobs = [
   {
     name: "Daily Maintenance",
@@ -65,6 +79,11 @@ const jobs = [
     name: "Redis Cache Clear",
     schedule: "0 2 * * *", // Daily at 2 AM
     task: clearRedisCache,
+    },
+    {
+    name: "Property Alerts",
+    schedule: config.nodeenv === "dev" ? "*/30 * * * * *" : "0 8 * * *", // Every 30 seconds in dev, 8 AM daily in production
+    task: processPropertyAlerts,
   },
 ];
 
