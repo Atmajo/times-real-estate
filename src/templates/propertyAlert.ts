@@ -73,325 +73,150 @@ export const generatePropertyAlertEmail = (data: AlertEmailData): string => {
     return criteria.length ? criteria.join(" • ") : "All properties";
   };
 
-  return `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html dir="ltr" lang="en">
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <meta name="x-apple-disable-message-reformatting" />
     <title>New Properties Matching Your Alert</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f8f9fa;
-        }
-        
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-        
-        .header h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-        
-        .header p {
-            font-size: 16px;
-            opacity: 0.9;
-        }
-        
-        .content {
-            padding: 30px;
-        }
-        
-        .greeting {
-            font-size: 18px;
-            margin-bottom: 20px;
-            color: #2c3e50;
-        }
-        
-        .alert-criteria {
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            border-left: 4px solid #667eea;
-        }
-        
-        .alert-criteria h3 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-        
-        .alert-criteria p {
-            color: #6c757d;
-            font-size: 14px;
-        }
-        
-        .properties-section h2 {
-            color: #2c3e50;
-            margin-bottom: 25px;
-            font-size: 22px;
-            text-align: center;
-        }
-        
-        .property-card {
-            border: 1px solid #e9ecef;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            overflow: hidden;
-            transition: box-shadow 0.3s ease;
-        }
-        
-        .property-card:hover {
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        
-        .property-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            background-color: #f8f9fa;
-        }
-        
-        .property-info {
-            padding: 20px;
-        }
-        
-        .property-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-        
-        .property-price {
-            font-size: 24px;
-            font-weight: 700;
-            color: #667eea;
-            margin-bottom: 15px;
-        }
-        
-        .property-details {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        
-        .detail-item {
-            background-color: #f8f9fa;
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-            color: #6c757d;
-        }
-        
-        .property-location {
-            color: #6c757d;
-            font-size: 14px;
-            margin-bottom: 15px;
-        }
-        
-        .property-description {
-            color: #495057;
-            font-size: 14px;
-            line-height: 1.5;
-            margin-bottom: 15px;
-        }
-        
-        .view-property-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-block;
-            transition: transform 0.2s ease;
-        }
-        
-        .view-property-btn:hover {
-            transform: translateY(-2px);
-        }
-        
-        .footer {
-            background-color: #f8f9fa;
-            padding: 30px;
-            text-align: center;
-            border-top: 1px solid #e9ecef;
-        }
-        
-        .footer p {
-            color: #6c757d;
-            font-size: 14px;
-            margin-bottom: 15px;
-        }
-        
-        .unsubscribe-btn {
-            color: #dc3545;
-            text-decoration: none;
-            font-size: 14px;
-        }
-        
-        .unsubscribe-btn:hover {
-            text-decoration: underline;
-        }
-        
-        @media (max-width: 600px) {
-            .property-details {
-                flex-direction: column;
-                gap: 10px;
-            }
+  </head>
+  <body style="background-color:#f9f9f9;color:#212121;font-family:Arial,Helvetica,sans-serif">
+    <table
+      align="center"
+      width="100%"
+      border="0"
+      cellpadding="0"
+      cellspacing="0"
+      role="presentation"
+      style="max-width:600px;padding:20px;margin:0 auto;background-color:#ffffff;box-shadow:0 2px 8px rgba(0,0,0,0.05);border-radius:8px">
+      <tbody>
+        <tr>
+          <td style="padding:20px;text-align:center;background-color:#2c3e50;border-radius:8px 8px 0 0">
+            <img
+              alt="Company Logo"
+              height="70"
+              src="./logo.svg"
+              style="display:block;margin:0 auto;outline:none;border:none;text-decoration:none"
+            />
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:30px 40px">
+            <h1 style="font-size:22px;font-weight:bold;color:#2c3e50;margin-bottom:20px;text-align:center">
+              🏠 New Properties Found!
+            </h1>
+            <p style="font-size:15px;line-height:24px;color:#555;margin-bottom:20px;text-align:center">
+              Hello ${data.userName || "there"}, we found ${
+    data.properties.length
+  } new ${
+    data.properties.length === 1 ? "property" : "properties"
+  } matching your search criteria.
+            </p>
             
-            .detail-item {
-                text-align: center;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🏠 New Properties Found!</h1>
-            <p>Properties matching your search criteria</p>
-        </div>
-        
-        <div class="content">
-            <div class="greeting">
-                Hello ${data.userName || "there"},
+            <div style="background-color:#f8f9fa;padding:20px;border-radius:8px;margin-bottom:30px;border-left:4px solid #2c3e50">
+              <h3 style="color:#2c3e50;margin-bottom:10px;font-size:16px;font-weight:bold">Your Search Criteria:</h3>
+              <p style="color:#555;font-size:14px;margin:0">${formatCriteria()}</p>
             </div>
             
-            <div class="alert-criteria">
-                <h3>Your Search Criteria:</h3>
-                <p>${formatCriteria()}</p>
-            </div>
-            
-            <div class="properties-section">
-                <h2>🎯 ${data.properties.length} New ${
-    data.properties.length === 1 ? "Property" : "Properties"
-  } Found</h2>
-                
-                ${data.properties
-                  .map(
-                    (property) => `
-                    <div class="property-card">
-                        ${
-                          property.images && property.images.length > 0
-                            ? `
-                            <img src="${property.images[0]}" alt="${property.name}" class="property-image" />
-                        `
-                            : `
-                            <div class="property-image" style="display: flex; align-items: center; justify-content: center; background-color: #f8f9fa; color: #6c757d;">
-                                No Image Available
-                            </div>
-                        `
-                        }
-                        
-                        <div class="property-info">
-                            <div class="property-title">${property.name}</div>
-                            <div class="property-price">${formatPrice(
-                              property.price
-                            )}</div>
-                            
-                            <div class="property-details">
-                                ${
-                                  property.beds
-                                    ? `<span class="detail-item">🛏️ ${property.beds} Beds</span>`
-                                    : ""
-                                }
-                                ${
-                                  property.baths
-                                    ? `<span class="detail-item">🚿 ${property.baths} Baths</span>`
-                                    : ""
-                                }
-                                ${
-                                  property.sqft
-                                    ? `<span class="detail-item">📐 ${property.sqft} sqft</span>`
-                                    : ""
-                                }
-                                ${
-                                  property.type
-                                    ? `<span class="detail-item">🏢 ${property.type}</span>`
-                                    : ""
-                                }
-                            </div>
-                            
-                            <div class="property-location">
-                                📍 ${property.community.name}, ${
-                      property.area.name
-                    }
-                                ${
-                                  property.developer
-                                    ? ` • By ${property.developer.name}`
-                                    : ""
-                                }
-                            </div>
-                            
-                            ${
-                              property.description
-                                ? `
-                                <div class="property-description">
-                                    ${
-                                      property.description.length > 150
-                                        ? property.description.substring(
-                                            0,
-                                            150
-                                          ) + "..."
-                                        : property.description
-                                    }
-                                </div>
-                            `
-                                : ""
-                            }
-                            
-                            <a href="${
-                              process.env.CLIENT_URL ||
-                              "https://your-website.com"
-                            }/p/${property.id}" class="view-property-btn">
-                                View Property Details
-                            </a>
-                        </div>
+            ${data.properties
+              .map(
+                (property) => `
+                <div style="border:1px solid #eee;border-radius:8px;margin-bottom:25px;overflow:hidden">
+                  ${
+                    property.images && property.images.length > 0
+                      ? `
+                      <img src="${property.images[0]}" alt="${property.name}" style="width:100%;height:200px;object-fit:cover;display:block" />
+                  `
+                      : `
+                      <div style="width:100%;height:200px;background-color:#f8f9fa;display:flex;align-items:center;justify-content:center;color:#6c757d;font-size:14px">
+                          No Image Available
+                      </div>
+                  `
+                  }
+                  
+                  <div style="padding:20px">
+                    <h2 style="font-size:20px;font-weight:bold;color:#2c3e50;margin-bottom:10px">${
+                      property.name
+                    }</h2>
+                    <p style="font-size:24px;font-weight:bold;color:#e74c3c;margin-bottom:15px">${formatPrice(
+                      property.price
+                    )}</p>
+                    
+                    <div style="margin-bottom:15px">
+                      ${
+                        property.beds
+                          ? `<span style="background-color:#f8f9fa;padding:6px 12px;border-radius:20px;font-size:13px;color:#555;margin-right:10px;display:inline-block;margin-bottom:5px">🛏️ ${property.beds} Beds</span>`
+                          : ""
+                      }
+                      ${
+                        property.baths
+                          ? `<span style="background-color:#f8f9fa;padding:6px 12px;border-radius:20px;font-size:13px;color:#555;margin-right:10px;display:inline-block;margin-bottom:5px">🚿 ${property.baths} Baths</span>`
+                          : ""
+                      }
+                      ${
+                        property.sqft
+                          ? `<span style="background-color:#f8f9fa;padding:6px 12px;border-radius:20px;font-size:13px;color:#555;margin-right:10px;display:inline-block;margin-bottom:5px">📐 ${property.sqft} sqft</span>`
+                          : ""
+                      }
+                      ${
+                        property.type
+                          ? `<span style="background-color:#f8f9fa;padding:6px 12px;border-radius:20px;font-size:13px;color:#555;margin-right:10px;display:inline-block;margin-bottom:5px">🏢 ${property.type}</span>`
+                          : ""
+                      }
                     </div>
-                `
-                  )
-                  .join("")}
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>This email was sent because you have an active property alert.</p>
-            <p>If you no longer wish to receive these alerts, you can:</p>
+                    
+                    <p style="color:#777;font-size:14px;margin-bottom:15px">
+                      📍 ${property.community.name}, ${property.area.name}
+                      ${
+                        property.developer
+                          ? ` • By ${property.developer.name}`
+                          : ""
+                      }
+                    </p>
+                    
+                    ${
+                      property.description
+                        ? `
+                        <p style="color:#555;font-size:14px;line-height:20px;margin-bottom:15px">
+                          ${
+                            property.description.length > 150
+                              ? property.description.substring(0, 150) + "..."
+                              : property.description
+                          }
+                        </p>
+                    `
+                        : ""
+                    }
+                    
+                    <div style="text-align:center;margin:20px 0">
+                      <a href="${
+                        process.env.CLIENT_URL || "https://your-website.com"
+                      }/p/${
+                  property.id
+                }" style="background-color:#2c3e50;color:white;padding:12px 24px;border-radius:6px;font-size:14px;font-weight:bold;text-decoration:none;display:inline-block">
+                        View Property Details
+                      </a>
+                    </div>
+                  </div>
+                </div>
+            `
+              )
+              .join("")}
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:20px 40px;border-top:1px solid #eee;text-align:center;color:#888;font-size:12px;line-height:18px">
+            This email was sent because you have an active property alert.<br/>
+            If you no longer wish to receive these alerts, you can 
             <a href="${
               data.unsubscribeUrl
-            }" class="unsubscribe-btn">Unsubscribe from this alert</a>
-        </div>
-    </div>
-</body>
+            }" style="color:#e74c3c;text-decoration:none">unsubscribe from this alert</a>.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
 </html>
   `;
 };

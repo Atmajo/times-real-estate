@@ -22,8 +22,8 @@ export const resetPasswordTemplate = (
           <td style="padding:20px;text-align:center;background-color:#2c3e50;border-radius:8px 8px 0 0">
             <img
               alt="Company Logo"
-              height="45"
-              src="https://via.placeholder.com/150x45.png?text=Your+Logo"
+              height="70"
+              src="./logo.svg"
               style="display:block;margin:0 auto;outline:none;border:none;text-decoration:none"
             />
           </td>
