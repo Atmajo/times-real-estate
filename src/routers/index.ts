@@ -60,6 +60,6 @@ router.use("/agent", agentRouter);
 router.use("/admin", verifyToken, adminRouter);
 router.use("/dashboard", verifyToken, dashboardRouter);
 router.use("/file", verifyToken, fileRouter);
-router.use("/alerts", alertRouter); // Alert router - no authentication required
+router.use("/alerts", verifyToken, alertRouter); // Alert router - no authentication required
 
 export { router as indexRouter };

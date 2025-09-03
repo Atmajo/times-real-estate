@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { ReturnResponse } from "@/lib/returnResponse";
+import logger from "@/logger/logger";
 
 const createAlertSchema = z.object({
   email: z.string().email("Invalid email format"),
@@ -23,43 +24,65 @@ const createAlertSchema = z.object({
 });
 
 export const createAlert = async (req: Request, res: Response) => {
+  if (!req.user) {
+    return ReturnResponse.error(res, {
+      message: "Unauthorized",
+      statusCode: 401,
+    });
+  }
+
   try {
     const validatedData = createAlertSchema.parse(req.body);
-    
+
     // Validate price range
-    if (validatedData.minPrice && validatedData.maxPrice && validatedData.minPrice >= validatedData.maxPrice) {
+    if (
+      validatedData.minPrice &&
+      validatedData.maxPrice &&
+      validatedData.minPrice >= validatedData.maxPrice
+    ) {
       return ReturnResponse.error(res, {
         message: "Minimum price must be less than maximum price",
         statusCode: 400,
       });
     }
-    
+
     // Validate beds range
-    if (validatedData.minBeds && validatedData.maxBeds && validatedData.minBeds >= validatedData.maxBeds) {
+    if (
+      validatedData.minBeds &&
+      validatedData.maxBeds &&
+      validatedData.minBeds >= validatedData.maxBeds
+    ) {
       return ReturnResponse.error(res, {
         message: "Minimum beds must be less than maximum beds",
         statusCode: 400,
       });
     }
-    
+
     // Validate baths range
-    if (validatedData.minBaths && validatedData.maxBaths && validatedData.minBaths >= validatedData.maxBaths) {
+    if (
+      validatedData.minBaths &&
+      validatedData.maxBaths &&
+      validatedData.minBaths >= validatedData.maxBaths
+    ) {
       return ReturnResponse.error(res, {
         message: "Minimum baths must be less than maximum baths",
         statusCode: 400,
       });
     }
-    
+
     // Validate sqft range
-    if (validatedData.minSqft && validatedData.maxSqft && validatedData.minSqft >= validatedData.maxSqft) {
+    if (
+      validatedData.minSqft &&
+      validatedData.maxSqft &&
+      validatedData.minSqft >= validatedData.maxSqft
+    ) {
       return ReturnResponse.error(res, {
         message: "Minimum sqft must be less than maximum sqft",
         statusCode: 400,
       });
     }
-
-    // Get userId from request if user is authenticated
-    const userId = req.user?.id || null;
+    
+    const userId = req.user.id;
 
     const alert = await prisma.alert.create({
       data: {
@@ -82,7 +105,7 @@ export const createAlert = async (req: Request, res: Response) => {
       });
     }
 
-    console.error("Error creating alert:", error);
+    logger.error("Error creating alert:", error);
     return ReturnResponse.error(res, {
       message: "Internal server error",
       statusCode: 500,
