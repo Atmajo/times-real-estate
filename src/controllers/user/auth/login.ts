@@ -14,7 +14,7 @@ export const userLogin = async (req: Request, res: Response) => {
       schema: loginSchema,
       body,
     });
-
+    
     const user = await prisma.user.findUnique({
       where: { email: validatedData.email },
     });
@@ -43,11 +43,8 @@ export const userLogin = async (req: Request, res: Response) => {
       token: token,
       data: {
         user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          isVerified: user.isVerified,
+          ...user,
+          password: null
         },
       },
     });
