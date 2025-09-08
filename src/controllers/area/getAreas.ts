@@ -16,7 +16,10 @@ export const getAreas = async (req: Request, res: Response) => {
           orderBy: { createdAt: "desc" },
         },
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: [
+        { properties: { _count: "desc" } },
+        { createdAt: "desc" }
+      ],
     });
 
     if (!areas) {
@@ -37,6 +40,7 @@ export const getAreas = async (req: Request, res: Response) => {
         .json({ page, limit, totalPages, totalItems, items });
     }
   } catch (error) {
+    console.log("Error in getAreas controller:", error);
     logger.error("Error in getAreas controller:", error);
     res.status(500).json({ error: "Failed to get areas" });
   }
