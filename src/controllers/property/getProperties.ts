@@ -59,7 +59,7 @@ export const getProperties = async (req: Request, res: Response) => {
     } = validatedQuery;
 
     const where: any =
-      req.user?.role !== "AGENT" ? {} : { userId: req.user.id };
+      req.user?.role !== "AGENT" ? {isDraft: false} : { userId: req.user.id ,isDraft: false};
 
     if (status) where.status = status;
     if (type) where.type = type;
