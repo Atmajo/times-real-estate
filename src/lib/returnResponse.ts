@@ -52,10 +52,7 @@ export class ReturnResponse {
   /**
    * Send an error response
    */
-  static error(
-    res: Response,
-    options: ErrorResponseOptions = {}
-  ): Response {
+  static error(res: Response, options: ErrorResponseOptions = {}): Response {
     const {
       message = "An error occurred",
       error = message,
@@ -100,13 +97,11 @@ export class ReturnResponse {
 
     const response = {
       success: true,
-      pagination: {
-        page,
-        limit,
-        totalPages,
-        totalItems,
-      },
-      data: items,
+      page,
+      limit,
+      totalPages,
+      totalItems,
+      items,
     };
 
     return res.status(statusCode).json(response);
@@ -210,18 +205,18 @@ export class ReturnResponse {
   ): Response {
     // Log the full error for debugging
     logger.error(`Error in ${context}:`, error);
-    
+
     // Handle specific error types
     if (error instanceof Error) {
       if (error.message.startsWith("Validation failed")) {
         return this.badRequest(res, "Invalid request data", error.message);
       }
-      
+
       // Prisma unique constraint violation
       if (error.message.includes("Unique constraint")) {
         return this.badRequest(res, "Resource already exists");
       }
-      
+
       // Prisma foreign key constraint
       if (error.message.includes("Foreign key constraint")) {
         return this.badRequest(res, "Referenced resource not found");

@@ -19,6 +19,7 @@ import { adminRouter } from "./adminRouter";
 import { sellingRouter } from "./sellingRouter";
 import { dashboardRouter } from "./dashboardRouter";
 import { alertRouter } from "./alertRouter";
+import { offerRouter } from "./offerRouter";
 
 const router = Router();
 
@@ -52,6 +53,7 @@ router.use("/communities", verifyToken, communityRouter);
 router.use("/payment-plans", verifyToken, paymentPlanRouter);
 router.use("/properties", propertyRouter);
 router.use("/property-contacts", verifyToken, propertyContactRouter);
+router.use("/offers", verifyToken, offerRouter);
 router.use("/contacts", contactRouter);
 router.use("/sellings", sellingRouter);
 router.use("/collections", verifyToken, collectionRouter);
@@ -60,6 +62,6 @@ router.use("/agent", agentRouter);
 router.use("/admin", verifyToken, adminRouter);
 router.use("/dashboard", verifyToken, dashboardRouter);
 router.use("/file", verifyToken, fileRouter);
-router.use("/alerts", verifyToken, alertRouter); // Alert router - no authentication required
+router.use("/alerts", verifyToken, alertRouter);
 
 export { router as indexRouter };

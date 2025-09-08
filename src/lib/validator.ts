@@ -1,5 +1,9 @@
 import * as z from "zod";
-import { validatorTypes } from "@/types";
+
+export interface validatorTypes {
+  schema: z.ZodSchema<any>;
+  body: any;
+}
 
 export const validator = ({ schema, body }: validatorTypes) => {
   try {
