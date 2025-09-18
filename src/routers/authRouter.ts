@@ -10,6 +10,7 @@ import { verifyToken } from "@/middlewares/token";
 import { resendOtp } from "@/controllers/user/auth/resendOtp";
 import { googleAuth } from "@/controllers/user/auth/google/google";
 import { googleCallback } from "@/controllers/user/auth/google/googleCallback";
+import { forgotPassword } from "@/controllers/user/auth/forgot-password";
 
 const router = Router();
 
@@ -25,13 +26,16 @@ router.post("/user/login", userLogin);
 router.post("/user/register", userRegister);
 
 // Admin password reset route
-router.post("/user/resend", verifyToken, resendOtp);
+router.post("/user/resend", resendOtp);
 
 // User verification route
 router.post("/user/verify", verifyToken, userVerify);
 
 // Update admin-user role
 router.patch("/verify/:userId", verifyToken, updateRole);
+
+// Forget password routes
+router.post("/forgot-password", forgotPassword);
 
 // Google OAuth 2 - with session logging for debugging
 router.get("/google", googleAuth);

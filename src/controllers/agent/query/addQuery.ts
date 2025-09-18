@@ -11,9 +11,21 @@ export const addQuery = async (req: Request, res: Response) => {
       schema: addQuerySchema,
       body,
     });
-
+    
     if (!validatedData) {
       return res.status(500).json({ message: "Validation error" });
+    }
+
+    const existingQuery = await prisma.agentQuery.findFirst({
+      where: {
+        email: validatedData.email,
+      },
+    });
+
+    if (existingQuery) {
+      return res.status(400).json({
+        message: "Query with this email already exists",
+      });
     }
 
     const query = await prisma.agentQuery.create({

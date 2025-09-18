@@ -9,6 +9,9 @@ export const getAgents = async (req: Request, res: Response) => {
       where: {
         role: "AGENT",
       },
+      include: {
+        area: true,
+      },
     });
 
     const paginatedAgents = paginate(

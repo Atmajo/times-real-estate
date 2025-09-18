@@ -10,11 +10,13 @@ import { updateAgent } from "@/controllers/agent/updateAgent";
 import { resendVerification } from "@/controllers/agent/resendVerification";
 import { getAgentByArea } from "@/controllers/agent/area/getAgentByArea";
 import { givePermitToAddProperty } from "@/controllers/agent/property/givePermitToAddProperty";
+import { getAgentById } from "@/controllers/agent/getAgentById";
 
 const router = Router();
 
 // Route to Agents
 router.get("/", verifyToken, getAgents);
+router.get("/:id", verifyToken, getAgentById);
 router.patch("/", verifyToken, updateAgent);
 router.delete("/:id", verifyToken, deleteAgent);
 

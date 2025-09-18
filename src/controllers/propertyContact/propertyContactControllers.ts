@@ -29,6 +29,7 @@ export const addPropertyContact = async (req: Request, res: Response) => {
     const { propertyId, name, phone, email, message } = validatedData;
     const propertyContact = await prisma.propertyContact.create({
       data: {
+        userId: req.user?.id,
         propertyId,
         name,
         phone,
@@ -54,12 +55,16 @@ export const getPropertyContacts = async (req: Request, res: Response) => {
   if (!req.user) {
     return res.status(401).json({ error: "Unauthorized" });
   }
-  
+
   try {
     const { propertyId } = req.query;
 
     const where: any = {};
     if (propertyId) where.propertyId = propertyId;
+
+    if (req.user.role === "USER") {
+      where.userId = req.user.id;
+    }
 
     if (req.user.role === "AGENT") {
       where.property = {

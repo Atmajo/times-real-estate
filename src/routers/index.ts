@@ -49,7 +49,7 @@ router.get("/logs", (req: Request, res: Response) => {
 router.use("/users", verifyToken, userRouter);
 router.use("/developers", verifyToken, developerRouter);
 router.use("/areas", areaRouter);
-router.use("/communities", verifyToken, communityRouter);
+router.use("/communities", communityRouter);
 router.use("/payment-plans", verifyToken, paymentPlanRouter);
 router.use("/properties", propertyRouter);
 router.use("/property-contacts", verifyToken, propertyContactRouter);

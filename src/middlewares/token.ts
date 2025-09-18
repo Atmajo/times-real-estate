@@ -58,11 +58,11 @@ export const verifyToken = (
       res.status(401).json({ error: "Token expired" });
       return;
     }
-
+    
     if (
       decoded.role === "USER" &&
       !decoded.permittedToAddProperty &&
-      req.originalUrl.includes("/property")
+      req.originalUrl === "/property"
     ) {
       return res.status(403).json({ error: "Forbidden route" });
     }

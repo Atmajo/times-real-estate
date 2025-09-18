@@ -25,8 +25,8 @@ export const getRequestTours = async (req: Request, res: Response) => {
     const limit = parseInt(validatedQuery.limit || "10");
 
     let where: any = {};
-    if (validatedQuery.userId === "true") {
-      where.userId = req.user?.id;
+    if (req.user.role === "USER") {
+      where.userId = req.user.id;
     }
     
     if (req.user.role === "AGENT") {
