@@ -1,4 +1,5 @@
 import { Area, Community, Developer, Property } from "@/generated/prisma";
+import { getLogoBase64 } from "@/lib/logoBase64";
 
 interface AlertEmailPropertyType extends Property, Community, Area, Developer {
   community: Community;
@@ -96,7 +97,7 @@ export const generatePropertyAlertEmail = (data: AlertEmailData): string => {
             <img
               alt="Company Logo"
               height="70"
-              src="./logo.svg"
+              src="${getLogoBase64()}"
               style="display:block;margin:0 auto;outline:none;border:none;text-decoration:none"
             />
           </td>

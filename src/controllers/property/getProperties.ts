@@ -11,7 +11,7 @@ export const getProperties = async (req: Request, res: Response) => {
       schema: getPropertiesQuerySchema,
       body: req.query,
     });
-    
+
     if (!validatedQuery) {
       return res.status(400).json({ error: "Invalid query parameters" });
     }
@@ -59,7 +59,7 @@ export const getProperties = async (req: Request, res: Response) => {
     } = validatedQuery;
 
     const where: any =
-      req.user?.role !== "AGENT" ? {} : { userId: req.user.id};
+      req.user?.role !== "AGENT" ? {} : { userId: req.user.id };
 
     if (status) where.status = status;
     if (type) where.type = type;
@@ -345,6 +345,8 @@ export const getProperty = async (req: Request, res: Response) => {
 
       // Include raw property data for backward compatibility
       rawProperty: property,
+
+      agent: property.user,
     };
 
     return res.status(200).json({ property: formattedProperty });

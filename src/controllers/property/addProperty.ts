@@ -33,7 +33,10 @@ export const addProperty = async (req: Request, res: Response) => {
       prisma.area.findUnique({ where: { id: validatedData.areaId } }),
     ]);
 
-    const userId = req.user.role === "AGENT" ? req.user.id : req.user.agentId;
+    const userId =
+      req.user.role === "AGENT" || req.user.role === "ADMIN"
+        ? req.user.id
+        : req.user.agentId;
 
     if (!developer)
       return res.status(404).json({ error: "Developer not found" });

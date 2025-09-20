@@ -1,3 +1,5 @@
+import { getLogoBase64 } from "@/lib/logoBase64";
+
 export const addPropertyTemplate = (
   link: string
 ) => `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
@@ -23,7 +25,7 @@ export const addPropertyTemplate = (
             <img
               alt="Company Logo"
               height="70"
-              src="./logo.svg"
+              src="${getLogoBase64()}"
               style="display:block;margin:0 auto;outline:none;border:none;text-decoration:none"
             />
           </td>
