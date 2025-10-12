@@ -1,6 +1,6 @@
 import { config } from "@/config/config";
 import logger from "@/logger/logger";
-import { generateGoogleToken } from "@/service/google";
+import { generateGoogleToken } from "@/services/google";
 import { Request, Response } from "express";
 
 export const googleCallback = async (req: Request, res: Response) => {

@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import logger from "@/logger/logger";
-import { createMeet, eventDetails } from "@/service/google";
+import { createMeet, eventDetails } from "@/services/google";
 import { Request, Response } from "express";
 import { Credentials } from "google-auth-library";
 

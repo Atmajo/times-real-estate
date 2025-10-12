@@ -1,29 +1,30 @@
-import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { Storage } from "@google-cloud/storage";
 
 export const deleteFile = async (fileUrl: string) => {
   try {
-    const s3Client = new S3Client({
-      region: process.env.AWS_REGION!,
-      credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY!,
-        secretAccessKey: process.env.AWS_SECRET_KEY!,
-      },
+    const projectId = process.env.GOOGLE_CLOUD_PROJECT_ID!;
+    const keyFilePath = process.env.GOOGLE_CLOUD_KEYFILE_PATH!;
+    
+    const storage = new Storage({
+      projectId: projectId,
+      keyFilename: keyFilePath,
     });
 
+    const bucket = storage.bucket(process.env.GOOGLE_CLOUD_BUCKET_NAME!);
+
     const url = new URL(fileUrl);
-    const s3Key = url.pathname.substring(1);
+    const gcsKey = url.pathname.split("/").pop()?.includes("/")
+      ? url.pathname.substring(url.pathname.indexOf("/", 1) + 1) // Remove bucket name from path
+      : url.pathname.substring(1); // Simple path extraction
 
-    // Create S3 DeleteObjectCommand
-    const deleteParams = {
-      Bucket: process.env.AWS_BUCKET_NAME,
-      Key: s3Key,
-    };
-
-    await s3Client.send(new DeleteObjectCommand(deleteParams));
+    await storage
+      .bucket(bucket.name)
+      .file(gcsKey.substring(gcsKey.indexOf("/") + 1))
+      .delete();
 
     return {
       success: true,
-      message: `File ${s3Key} deleted successfully`,
+      message: `File ${gcsKey} deleted successfully`,
     };
   } catch (error) {
     throw error;

@@ -1,5 +1,5 @@
 import logger from "@/logger/logger";
-import { generateGoogleRedirectUrl } from "@/service/google";
+import { generateGoogleRedirectUrl } from "@/services/google";
 import { Request, Response } from "express";
 
 export const googleAuth = async (req: Request, res: Response) => {

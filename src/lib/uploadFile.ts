@@ -1,7 +1,6 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import fs from "fs/promises";
 import path from "path";
 import { hashFile } from "./hashFile";
+import { Storage } from "@google-cloud/storage";
 
 export const uploadFile = async (
   file: any,
@@ -10,15 +9,15 @@ export const uploadFile = async (
   try {
     const key = await hashFile(file.path, "sha256");
 
-    const s3Client = new S3Client({
-      region: process.env.AWS_REGION!,
-      credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY!,
-        secretAccessKey: process.env.AWS_SECRET_KEY!,
-      },
+    const projectId = process.env.GOOGLE_CLOUD_PROJECT_ID!;
+    const keyFilePath = "/home/atmajo/Desktop/projects/times-real-estate/storied-glazing-473717-j6-758f24562994.json";
+    
+    const storage = new Storage({
+      projectId: projectId,
+      keyFilename: keyFilePath,
     });
-
-    const fileContent = await fs.readFile(file.path);
+    
+    const bucket = process.env.GOOGLE_CLOUD_BUCKET_NAME!;
 
     const folderName = email.replace(/[^\w.-]/g, "_").toLowerCase();
 
@@ -28,18 +27,14 @@ export const uploadFile = async (
 
     const fileKey = `${folderName}/${fileName}`;
 
-    const uploadParams = {
-      Bucket: process.env.AWS_BUCKET_NAME,
-      Key: fileKey,
-      Body: fileContent,
-      ContentType: file.mimetype,
-      ACL: "public-read" as any,
+    const options = {
+      destination: fileKey,
     };
 
-    await s3Client.send(new PutObjectCommand(uploadParams));
+    await storage.bucket(bucket).upload(file.path, options);
 
     return {
-      s3FileUrl: `https://${uploadParams.Bucket}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`,
+      s3FileUrl: `https://storage.googleapis.com/${bucket}/${fileKey}`,
     };
   } catch (error) {
     throw error;

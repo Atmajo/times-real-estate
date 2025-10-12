@@ -1,30 +1,30 @@
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { Storage } from "@google-cloud/storage";
 
 export const downloadFile = async (fileUrl: string, expirationTime = 300) => {
   try {
-    const s3Client = new S3Client({
-      region: process.env.AWS_REGION!,
-      credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY!,
-        secretAccessKey: process.env.AWS_SECRET_KEY!,
-      },
+    const projectId = process.env.GOOGLE_CLOUD_PROJECT_ID!;
+    const keyFilePath =
+      "/home/atmajo/Desktop/projects/times-real-estate/storied-glazing-473717-j6-758f24562994.json";
+    
+    const storage = new Storage({
+      projectId: projectId,
+      keyFilename: keyFilePath,
     });
 
+    const bucket = storage.bucket(process.env.GOOGLE_CLOUD_BUCKET_NAME!);
+
     const url = new URL(fileUrl);
-    const s3Key = url.pathname.substring(1);
+    const gcsKey = url.pathname.split("/").pop()?.includes("/")
+      ? url.pathname.substring(url.pathname.indexOf("/", 1) + 1) // Remove bucket name from path
+      : url.pathname.substring(1); // Simple path extraction
 
-    // Create S3 GetObjectCommand
-    const getParams = {
-      Bucket: process.env.AWS_BUCKET_NAME,
-      Key: s3Key,
-    };
+    const file = bucket.file(gcsKey.substring(gcsKey.indexOf("/") + 1));
 
-    // Generate a signed URL (valid for 5 minutes)
-    const command = new GetObjectCommand(getParams);
-
-    const signedUrl = await getSignedUrl(s3Client, command, {
-      expiresIn: expirationTime,
+    // Generate a signed URL (valid for specified expiration time in seconds)
+    const [signedUrl] = await file.getSignedUrl({
+      version: "v4",
+      action: "read",
+      expires: Date.now() + expirationTime * 1000, // Convert seconds to milliseconds
     });
 
     return {

@@ -9,7 +9,7 @@ const router = Router();
 const upload = multer({ dest: "uploads/" });
 
 router.post("/upload", upload.array("files"), fileUpload);
-router.delete("/delete", fileDelete);
+router.post("/delete", fileDelete);
 router.post("/download", fileDownload);
 
 export { router as fileRouter };
